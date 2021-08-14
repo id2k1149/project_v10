@@ -1,6 +1,5 @@
 package org.id2k1149.project_v10.service;
 
-import org.id2k1149.project_v10.model.Role;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +12,15 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = NONE)
 @Rollback(false)
-public class UserServiceImplTest {
+public class UserServiceTest {
     private final Faker faker = new Faker();
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Test
-    public void saveRoleTest() {
-//        userService.saveRole(new Role(null,"ROLE_USER"));
-//        userService.saveRole(new Role(null,"ROLE_ADMIN"));
+    public void test() {
+
     }
 
 
