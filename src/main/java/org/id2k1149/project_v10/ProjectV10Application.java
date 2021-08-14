@@ -24,6 +24,7 @@ public class ProjectV10Application {
 		return new BCryptPasswordEncoder();
 	}
 
+	/*
 	@Bean
 	CommandLineRunner run(UserService userService) {
 		return args -> {
@@ -54,8 +55,8 @@ public class ProjectV10Application {
 			userService.addRoleToUser("user_1", "ROLE_USER");
 			userService.addRoleToUser("user_1", "ROLE_ADMIN");
 			userService.addRoleToUser("user_2", "ROLE_USER");
-
-
 		};
 	}
+
+	 */
 }
