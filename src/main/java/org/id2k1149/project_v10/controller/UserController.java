@@ -1,4 +1,4 @@
-package org.id2k1149.project_v10.api;
+package org.id2k1149.project_v10.controller;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
