@@ -3,6 +3,7 @@ package org.id2k1149.project_v10.restController;
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.project_v10.model.User;
 import org.id2k1149.project_v10.service.UserService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,10 +22,29 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
-//    @PostMapping("/user/save")
-//    public ResponseEntity<User> saveUser(@RequestBody User user) {
-//        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
-//        return ResponseEntity.created(uri).body(userService.saveUser(user));
-//    }
+    @GetMapping(path = "{id}")
+    public ResponseEntity<User> getUser(@PathVariable("id") Long id) {
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/{id}").toUriString());
+        return ResponseEntity.created(uri).body(userService.getUser(id));
+    }
+
+    @PostMapping()
+    public void addUser(@RequestBody User user) {
+        userService.addUser(user);
+    }
+
+    @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void updateUser(
+            @RequestBody User user,
+            @PathVariable("id") Long id
+    ) {
+        userService.updateUser(user, id);
+    }
+
+    @DeleteMapping(path = "{id}")
+    public void deleteUser(@PathVariable("id") Long id) {
+        userService.deleteUser(id);
+    }
+
 
 }
