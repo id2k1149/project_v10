@@ -32,12 +32,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.sessionManagement().sessionCreationPolicy(STATELESS);
+//        http.sessionManagement().sessionCreationPolicy(STATELESS);
+        http.authorizeRequests().antMatchers("/", "/welcome", "/resources/**", "/registration").permitAll();
         http.authorizeRequests().antMatchers("/api/v1/**").permitAll();
 //        http.authorizeRequests().antMatchers("/api/login/**").permitAll();
         http.authorizeRequests().antMatchers(GET, "/api/user/**").hasAnyAuthority("ROLE_USER");
         http.authorizeRequests().antMatchers(POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().anyRequest().authenticated();
+
+        http.formLogin()
+                .loginPage("/login")
+                .permitAll()
+                .defaultSuccessUrl("/vote", true)
+                .and()
+
+            .logout()
+            .permitAll();
+
 
           }
 
