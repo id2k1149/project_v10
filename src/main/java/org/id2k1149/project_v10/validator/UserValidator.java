@@ -1,5 +1,6 @@
 package org.id2k1149.project_v10.validator;
 
+import lombok.RequiredArgsConstructor;
 import org.id2k1149.project_v10.model.User;
 import org.id2k1149.project_v10.service.UserService;
 import org.springframework.stereotype.Component;
@@ -8,12 +9,9 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 @Component
+@RequiredArgsConstructor
 public class UserValidator implements Validator {
     private final UserService userService;
-
-    public UserValidator(UserService userService) {
-        this.userService = userService;
-    }
 
     @Override
     public boolean supports(Class<?> aClass) {
