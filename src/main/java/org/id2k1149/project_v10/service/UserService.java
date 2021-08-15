@@ -40,7 +40,7 @@ public class UserService implements UserDetailsService {
         } else {
             log.info("User was found in DB: {}", username);
         }
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().getAuthority()));
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
@@ -76,7 +76,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void addUser(User user) {
+    public User addUser(User user) {
         Optional<User> optionalUser = Optional.ofNullable(userRepo.findByUsername(user.getUsername()));
         if (optionalUser.isPresent()) {
             log.error("The name {} is already used", user.getUsername());
@@ -87,6 +87,7 @@ public class UserService implements UserDetailsService {
         user.setRole(Role.USER);
 //        user.setRole(Role.ADMIN);
         userRepo.save(user);
+        return user;
     }
 
     @Transactional
