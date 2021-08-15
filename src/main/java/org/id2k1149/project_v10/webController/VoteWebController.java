@@ -1,5 +1,6 @@
 package org.id2k1149.project_v10.webController;
 
+import lombok.RequiredArgsConstructor;
 import org.id2k1149.project_v10.model.Counter;
 import org.id2k1149.project_v10.model.Voter;
 import org.id2k1149.project_v10.service.CounterService;
@@ -10,26 +11,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-
 import java.util.List;
 import java.util.Optional;
 
-
 @Controller
+@RequiredArgsConstructor
 public class VoteWebController {
     private final InfoService infoService;
     private final CounterService counterService;
     private final VoterService voterService;
-
-    public VoteWebController(InfoService infoService,
-                             CounterService counterService,
-                             VoterService voterService) {
-
-        this.infoService = infoService;
-        this.counterService = counterService;
-        this.voterService = voterService;
-    }
-
 
     @GetMapping("/vote")
     public String survey(Model model) {

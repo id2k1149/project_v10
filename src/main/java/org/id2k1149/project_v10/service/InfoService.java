@@ -11,7 +11,6 @@ import org.id2k1149.project_v10.to.AnswerTo;
 import org.id2k1149.project_v10.util.AnswerUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;

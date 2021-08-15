@@ -3,7 +3,6 @@ package org.id2k1149.project_v10.util;
 import org.id2k1149.project_v10.model.User;
 import org.id2k1149.project_v10.model.Voter;
 import org.id2k1149.project_v10.to.VoterTo;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
