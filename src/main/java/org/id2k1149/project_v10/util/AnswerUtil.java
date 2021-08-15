@@ -4,7 +4,6 @@ import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.Info;
 import org.id2k1149.project_v10.to.AnswerTo;
 import org.id2k1149.project_v10.to.InfoTo;
-
 import java.util.ArrayList;
 import java.util.List;
 

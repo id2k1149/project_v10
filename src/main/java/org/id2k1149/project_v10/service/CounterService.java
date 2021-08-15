@@ -8,7 +8,6 @@ import org.id2k1149.project_v10.model.Counter;
 import org.id2k1149.project_v10.repo.CounterRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;

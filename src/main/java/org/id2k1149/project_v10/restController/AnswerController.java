@@ -1,5 +1,6 @@
 package org.id2k1149.project_v10.restController;
 
+import lombok.RequiredArgsConstructor;
 import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.service.AnswerService;
 import org.id2k1149.project_v10.service.InfoService;
@@ -7,23 +8,16 @@ import org.id2k1149.project_v10.to.AnswerTo;
 import org.id2k1149.project_v10.util.AnswerUtil;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/v1/answers")
+@RequiredArgsConstructor
 //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class AnswerController {
-
     private final AnswerService answerService;
     private final InfoService infoService;
-
-    public AnswerController(AnswerService answerService,
-                            InfoService infoService) {
-        this.answerService = answerService;
-        this.infoService = infoService;
-    }
 
     @GetMapping
     public List<Answer> getAnswers() {

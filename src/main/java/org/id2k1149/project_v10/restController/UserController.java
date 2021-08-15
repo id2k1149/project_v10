@@ -18,15 +18,25 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping()
-    public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.ok().body(userService.getUsers());
+//    @GetMapping()
+//    public ResponseEntity<List<User>> getUsers() {
+//        return ResponseEntity.ok().body(userService.getUsers());
+//    }
+
+//    @GetMapping(path = "{id}")
+//    public ResponseEntity<User> getUser(@PathVariable("id") Long id) {
+//        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/{id}").toUriString());
+//        return ResponseEntity.created(uri).body(userService.getUser(id));
+//    }
+
+    @GetMapping
+    public List<User> getUsers() {
+        return userService.getUsers();
     }
 
     @GetMapping(path = "{id}")
-    public ResponseEntity<User> getUser(@PathVariable("id") Long id) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/{id}").toUriString());
-        return ResponseEntity.created(uri).body(userService.getUser(id));
+    public User getUser(@PathVariable("id") Long id) {
+        return userService.getUser(id);
     }
 
     @PostMapping()
@@ -51,7 +61,4 @@ public class UserController {
     public UserTo getUserVotes(@PathVariable("id") Long id) {
         return userService.getUserAllVotes(id);
     }
-
-
-
 }
