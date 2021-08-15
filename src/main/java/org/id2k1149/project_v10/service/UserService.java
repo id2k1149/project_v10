@@ -4,9 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.id2k1149.project_v10.model.Role;
 import org.id2k1149.project_v10.model.User;
+import org.id2k1149.project_v10.model.Voter;
 import org.id2k1149.project_v10.repo.UserRepo;
 import org.id2k1149.project_v10.exception.*;
+import org.id2k1149.project_v10.repo.VoterRepo;
+import org.id2k1149.project_v10.to.UserTo;
+import org.id2k1149.project_v10.to.VoterTo;
+import org.id2k1149.project_v10.util.VoterUtil;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,6 +29,7 @@ import java.util.*;
 public class UserService implements UserDetailsService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
+    private final VoterRepo voterRepo;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -51,10 +58,9 @@ public class UserService implements UserDetailsService {
     }
      */
 
-//    public User getUser(String username) {
-//        log.info("Finding user {} in DB", username);
-//        return userRepo.findByUsername(username);
-//    }
+    public User findByUsername(String username) throws UsernameNotFoundException {
+        return userRepo.findByUsername(username);
+    }
 
     public List<User> getUsers() {
         log.info("Find all users in DB");
@@ -120,5 +126,23 @@ public class UserService implements UserDetailsService {
             throw new NotFoundException(id + " does not exists");
         }
         userRepo.deleteById(id);
+    }
+
+    public User findUser() {
+        Object principal = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        String username = principal instanceof UserDetails ? ((UserDetails) principal).getUsername() : principal.toString();
+
+        return userRepo.findByUsername(username);
+    }
+
+    public UserTo getUserAllVotes(Long id) {
+        User user = getUser(id);
+        List<Voter> voterList = voterRepo.getByUser(user);
+        List<VoterTo> voterToList = VoterUtil.getVoterTo(user, voterList);
+
+        return new UserTo(id, user.getUsername(), voterToList);
     }
 }
