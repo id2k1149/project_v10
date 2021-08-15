@@ -1,5 +1,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <!-- Responsive navbar-->
@@ -15,6 +17,16 @@
                                         href="${contextPath}/welcome">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="${contextPath}/vote">Vote</a></li>
                 <li class="nav-item"><a class="nav-link" href="${contextPath}/result">Results</a></li>
+                <li class="nav-item">
+                    <c:if test="${pageContext.request.userPrincipal.name != null}">
+                        <form id="logoutForm" method="POST" action="${contextPath}/logout">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                            <a class="nav-link"
+                               onclick="document.forms['logoutForm'].submit()">${pageContext.request.userPrincipal.name} -> Logout</a>
+                        </form>
+
+                    </c:if>
+                </li>
                 <li class="nav-item">
                     <c:if test="${pageContext.request.userPrincipal.name != null}">
                         <form id="logoutForm" method="POST" action="${contextPath}/logout">
