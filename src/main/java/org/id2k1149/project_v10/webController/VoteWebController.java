@@ -5,8 +5,10 @@ import org.id2k1149.project_v10.model.Counter;
 import org.id2k1149.project_v10.model.Voter;
 import org.id2k1149.project_v10.service.CounterService;
 import org.id2k1149.project_v10.service.InfoService;
+import org.id2k1149.project_v10.service.UserService;
 import org.id2k1149.project_v10.service.VoterService;
 import org.id2k1149.project_v10.to.AnswerTo;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,7 @@ public class VoteWebController {
     private final InfoService infoService;
     private final CounterService counterService;
     private final VoterService voterService;
+    private final UserService userService;
 
     @GetMapping("/vote")
     public String survey(Model model) {
@@ -27,7 +30,12 @@ public class VoteWebController {
         if (answersList.size() > 0) {
             model.addAttribute("answersList", answersList);
             Optional<Voter> optionalVoter = voterService.checkUser();
-            if (optionalVoter.isPresent()) model.addAttribute("error1", "Your voted today.");
+            if (optionalVoter.isPresent()) {
+                model.addAttribute("error1", "You voted today.");
+                UserDetails userDetails = userService.loadUserByUsername(optionalVoter.get().getUser().getUsername());
+                model.addAttribute("username", optionalVoter.get().getUser().getUsername().toUpperCase());
+                model.addAttribute("role", userDetails.getAuthorities());
+            }
         } else {
             model.addAttribute("error2", "It is too late to vote.");
         }

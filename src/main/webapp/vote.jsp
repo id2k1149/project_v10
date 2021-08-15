@@ -18,7 +18,8 @@
         </div>
 
         <c:if test="${error1 != null}">
-            <p style="color:#0d6efd"><strong>${error1}</strong></p>
+            <h1>${role}</h1>
+            <p style="color:#0d6efd"><strong>${username}, ${error1}</strong></p>
         </c:if>
         <c:if test="${error2 != null}">
             <p style="color:#0d6efd"><strong>${error2}</strong></p>
