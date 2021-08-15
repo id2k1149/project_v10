@@ -1,5 +1,6 @@
 package org.id2k1149.project_v10.webController;
 
+import lombok.RequiredArgsConstructor;
 import org.id2k1149.project_v10.model.User;
 import org.id2k1149.project_v10.security.SecurityService;
 import org.id2k1149.project_v10.service.UserService;
@@ -12,18 +13,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
+@RequiredArgsConstructor
 public class UserWebController {
     private final UserService userService;
     private final SecurityService securityService;
     private final UserValidator userValidator;
-
-    public UserWebController(UserService userService,
-                             SecurityService securityService,
-                             UserValidator userValidator) {
-        this.userService = userService;
-        this.securityService = securityService;
-        this.userValidator = userValidator;
-    }
 
     @GetMapping("/registration")
     public String registration(Model model) {
