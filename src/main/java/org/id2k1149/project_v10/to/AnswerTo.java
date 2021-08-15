@@ -7,7 +7,7 @@ public class AnswerTo extends BaseTo {
     private final String title;
     private final List<InfoTo> info;
 
-    @ConstructorProperties({"id", "info"})
+    @ConstructorProperties({"id", "title", "info"})
     public AnswerTo(Long id,
                     String title,
                     List<InfoTo> info) {

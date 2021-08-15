@@ -9,7 +9,7 @@ public class InfoTo extends BaseTo {
     private final LocalDate date;
     private final Map<String, BigDecimal> details;
 
-    @ConstructorProperties({"id", "details"})
+    @ConstructorProperties({"id", "date", "details"})
     public InfoTo(Long id,
                   LocalDate date,
                   Map<String, BigDecimal> details) {

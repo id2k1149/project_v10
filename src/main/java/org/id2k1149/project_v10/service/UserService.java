@@ -8,7 +8,7 @@ import org.id2k1149.project_v10.model.Voter;
 import org.id2k1149.project_v10.repo.UserRepo;
 import org.id2k1149.project_v10.exception.*;
 import org.id2k1149.project_v10.repo.VoterRepo;
-import org.id2k1149.project_v10.to.UserTo;
+import org.id2k1149.project_v10.to.UserVotesTo;
 import org.id2k1149.project_v10.to.VoterTo;
 import org.id2k1149.project_v10.util.VoterUtil;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -138,11 +138,11 @@ public class UserService implements UserDetailsService {
         return userRepo.findByUsername(username);
     }
 
-    public UserTo getUserAllVotes(Long id) {
+    public UserVotesTo getUserAllVotes(Long id) {
         User user = getUser(id);
         List<Voter> voterList = voterRepo.getByUser(user);
         List<VoterTo> voterToList = VoterUtil.getVoterTo(user, voterList);
 
-        return new UserTo(id, user.getUsername(), voterToList);
+        return new UserVotesTo(id, user.getUsername(), voterToList);
     }
 }

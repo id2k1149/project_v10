@@ -9,7 +9,7 @@ public class VoterTo extends BaseTo {
     private final LocalDate date;
     private final Answer answer;
 
-    @ConstructorProperties({"id", "info"})
+    @ConstructorProperties({"id", "date", "answer"})
     public VoterTo(Long id,
                    LocalDate date,
                    Answer answer) {

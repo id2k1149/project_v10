@@ -3,13 +3,10 @@ package org.id2k1149.project_v10.restController;
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.project_v10.model.User;
 import org.id2k1149.project_v10.service.UserService;
-import org.id2k1149.project_v10.to.UserTo;
+import org.id2k1149.project_v10.to.UserVotesTo;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -58,7 +55,7 @@ public class UserController {
     }
 
     @GetMapping(path = "{id}/votes")
-    public UserTo getUserVotes(@PathVariable("id") Long id) {
+    public UserVotesTo getUserVotes(@PathVariable("id") Long id) {
         return userService.getUserAllVotes(id);
     }
 }
