@@ -1,6 +1,7 @@
 package org.id2k1149.project_v10.validator;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.id2k1149.project_v10.model.User;
 import org.id2k1149.project_v10.service.UserService;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import org.springframework.validation.Validator;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class UserValidator implements Validator {
     private final UserService userService;
 
@@ -25,18 +27,22 @@ public class UserValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "NotEmpty");
         if (user.getUsername().length() < 6 || user.getUsername().length() > 32) {
             errors.rejectValue("username", "Size.userForm.username");
+            log.error("wrong username length");
         }
         if (userService.findByUsername(user.getUsername()) != null) {
             errors.rejectValue("username", "Duplicate.userForm.username");
+            log.error("duplicate username");
         }
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
         if (user.getPassword().length() < 8 || user.getPassword().length() > 32) {
             errors.rejectValue("password", "Size.userForm.password");
+            log.error("wrong password length");
         }
 
         if (!user.getPasswordConfirm().equals(user.getPassword())) {
             errors.rejectValue("passwordConfirm", "Diff.userForm.passwordConfirm");
+            log.error("passwords don't match");
         }
     }
 }

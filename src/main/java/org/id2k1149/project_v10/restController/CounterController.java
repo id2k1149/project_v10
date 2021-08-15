@@ -3,6 +3,7 @@ package org.id2k1149.project_v10.restController;
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.project_v10.model.Counter;
 import org.id2k1149.project_v10.service.CounterService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -19,25 +20,27 @@ public class CounterController {
     }
 
     @GetMapping(path = "{id}")
-    public Counter getCounter(@PathVariable("id") Long id) {
+    public Counter getCounter(@PathVariable Long id) {
         return counterService.getCounter(id);
     }
 
-    @PostMapping(path = "{id}")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void addCounter(@RequestBody Counter newCounter) {
         counterService.addCounter(newCounter);
     }
 
     @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateCounter(
             @RequestBody Counter counter,
-            @PathVariable("id") Long id
+            @PathVariable Long id
     ) {
         counterService.updateCounter(id, counter);
     }
 
     @DeleteMapping(path = "{id}")
-    public void deleteCounter(@PathVariable("id") Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCounter(@PathVariable Long id) {
         counterService.deleteCounter(id);
     }
 }

@@ -1,6 +1,7 @@
 package org.id2k1149.project_v10.security;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +17,7 @@ import static org.springframework.http.HttpMethod.*;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -60,13 +61,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests().antMatchers("/", "/welcome", "/resources/**", "/registration").permitAll();
-        http.authorizeRequests().antMatchers(GET,"/api/v1/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/v1/**").permitAll();
+//        http.authorizeRequests().antMatchers(DELETE, "/api/v1/users/**").hasAuthority("ROLE_ADMIN");
+
 //        http.authorizeRequests().antMatchers("/api/login/**").permitAll();
 //        http.authorizeRequests().antMatchers(GET, "/api/v1/**").hasAnyAuthority("ROLE_USER");
 //        http.authorizeRequests().antMatchers(GET,"/api/v1/**").hasAnyAuthority();
-        http.authorizeRequests().antMatchers(DELETE, "/api/v1/**").hasAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers(PUT, "/api/v1/**").hasAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers(POST, "/api/v1/**").hasAuthority("ROLE_ADMIN");
+
+//        http.authorizeRequests().antMatchers(PUT, "/api/v1/**").hasAuthority("ROLE_ADMIN");
+//        http.authorizeRequests().antMatchers(POST, "/api/v1/**").hasAuthority("ROLE_ADMIN");
         http.authorizeRequests().anyRequest().authenticated();
 
         http.formLogin()

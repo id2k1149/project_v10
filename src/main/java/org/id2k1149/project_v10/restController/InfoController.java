@@ -3,6 +3,7 @@ package org.id2k1149.project_v10.restController;
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.project_v10.model.Info;
 import org.id2k1149.project_v10.service.InfoService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public class InfoController {
     }
 
     @GetMapping(path = "{id}")
-    public Info getInfo(@PathVariable("id") Long id) {
+    public Info getInfo(@PathVariable Long id) {
         return infoService.getInfo(id);
     }
 
@@ -30,15 +31,17 @@ public class InfoController {
     }
 
     @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateInfo(
             @RequestBody Info Info,
-            @PathVariable("id") Long id
+            @PathVariable Long id
     ) {
         infoService.updateInfo(Info, id);
     }
 
     @DeleteMapping(path = "{id}")
-    public void deleteInfo(@PathVariable("id") Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteInfo(@PathVariable Long id) {
         infoService.deleteInfo(id);
     }
 

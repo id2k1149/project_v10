@@ -6,7 +6,9 @@ import org.id2k1149.project_v10.service.AnswerService;
 import org.id2k1149.project_v10.service.InfoService;
 import org.id2k1149.project_v10.to.AnswerTo;
 import org.id2k1149.project_v10.util.AnswerUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -25,26 +27,28 @@ public class AnswerController {
     }
 
     @GetMapping(path = "{id}")
-    public Answer getAnswer(@PathVariable("id") Long id) {
+    public Answer getAnswer(@PathVariable Long id) {
         return answerService.getAnswer(id);
     }
 
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping
     public void addAnswer(@RequestBody Answer newAnswer) {
         answerService.addAnswer(newAnswer);
     }
 
     @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateAnswer(
             @RequestBody Answer answer,
-            @PathVariable("id") Long id
+            @PathVariable Long id
     ) {
         answerService.updateAnswer(answer, id);
     }
 
     @DeleteMapping(path = "{id}")
-    public void deleteAnswer(@PathVariable("id") Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAnswer(@PathVariable Long id) {
         answerService.deleteAnswer(id);
     }
 
@@ -54,7 +58,7 @@ public class AnswerController {
     }
 
     @GetMapping(path = "{id}/info")
-    public AnswerTo getAllInfoForAnswer(@PathVariable("id") Long id) {
+    public AnswerTo getAllInfoForAnswer(@PathVariable Long id) {
         return answerService.getAllInfoForAnswer(id);
     }
 }
