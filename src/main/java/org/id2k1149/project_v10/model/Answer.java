@@ -21,6 +21,11 @@ public class Answer {
     @GeneratedValue(strategy = AUTO)
     private Long id;
     private String title;
+
+    public Answer(String title) {
+        this.title = title;
+    }
+
     @Override
     public String toString() {
         return title;
