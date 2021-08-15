@@ -41,8 +41,7 @@ public class UserService implements UserDetailsService {
             log.info("User was found in DB: {}", username);
         }
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        Role role = user.getRole();
-        authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
+        authorities.add(new SimpleGrantedAuthority(user.getRole().getAuthority()));
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
