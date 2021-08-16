@@ -74,7 +74,7 @@ public class CounterService {
     }
 
     public List<Counter> getResult() {
-        List<Counter> counterList = counterRepo.findByDate(LocalDate.now());
+        List<Counter> counterList = counterRepo.findAllByDate(LocalDate.now());
         if (counterList.size() == 0) return counterList;
 
         List<Counter> sortedList = counterList.stream()
