@@ -1,16 +1,15 @@
 package org.id2k1149.project_v10.repo;
 
-import com.github.javafaker.DateAndTime;
 import com.github.javafaker.Faker;
 import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.Info;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -25,6 +24,12 @@ class InfoRepoTest {
     private InfoRepo testInfoRepo;
     @Autowired
     private AnswerRepo testAnswerRepo;
+
+    @AfterEach
+    void tearDown() {
+        testAnswerRepo.deleteAll();
+        testInfoRepo.deleteAll();
+    }
 
     public LocalDate getRandomDate() {
         long minDay = LocalDate.of(2021, 8, 1).toEpochDay();
@@ -42,14 +47,8 @@ class InfoRepoTest {
 
     @Test
     void findAllDate() {
-        Info info1 = new Info();
         LocalDate ld = getRandomDate();
-        info1.setDate(ld);
-        info1.setAnswer(getRandomAnswer());
-
         List<Info> list1 = new ArrayList<>();
-        list1.add(info1);
-        testInfoRepo.save(info1);
 
         Random random = new Random();
         int bound = random.nextInt(4) + 2;
@@ -74,14 +73,8 @@ class InfoRepoTest {
 
     @Test
     void findAllByAnswer() {
-        Info info1 = new Info();
-        info1.setDate(getRandomDate());
         Answer answer1 = getRandomAnswer();
-        info1.setAnswer(answer1);
-
         List<Info> list1 = new ArrayList<>();
-        list1.add(info1);
-        testInfoRepo.save(info1);
 
         Random random = new Random();
         int bound = random.nextInt(4) + 2;
