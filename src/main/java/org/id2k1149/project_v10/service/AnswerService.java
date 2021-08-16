@@ -70,7 +70,7 @@ public class AnswerService {
 
     public AnswerTo getAllInfoForAnswer(Long id) {
         Answer answer = getAnswer(id);
-        List<Info> infoList = infoRepo.getByAnswer(answer);
+        List<Info> infoList = infoRepo.findAllByAnswer(answer);
         List<InfoTo> infoToList = InfoUtil.getInfoTo(answer, infoList);
         return new AnswerTo(id, answer.getTitle(), infoToList);
     }

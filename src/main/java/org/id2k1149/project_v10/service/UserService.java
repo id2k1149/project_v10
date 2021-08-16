@@ -140,7 +140,7 @@ public class UserService implements UserDetailsService {
 
     public UserVotesTo getUserAllVotes(Long id) {
         User user = getUser(id);
-        List<Voter> voterList = voterRepo.getByUser(user);
+        List<Voter> voterList = voterRepo.findAllByUser(user);
         List<VoterTo> voterToList = VoterUtil.getVoterTo(user, voterList);
 
         return new UserVotesTo(id, user.getUsername(), voterToList);
