@@ -1,7 +1,7 @@
 package org.id2k1149.project_v10.repo;
 
 import com.github.javafaker.Faker;
-import org.id2k1149.project_v10.model.Answer;
+import org.id2k1149.project_v10.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -9,21 +9,21 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
-class AnswerRepoTest {
+class UserRepoTest {
     private final Faker faker = new Faker();
 
     @Autowired
-    private AnswerRepo testRepo;
+    private UserRepo testRepo;
 
     @Test
-    void findAnswerByTitle() {
-        Answer answer1 = new Answer();
-        String testTitle = faker.beer().name();
-        answer1.setTitle(testTitle);
-        testRepo.save(answer1);
+    void findByUsername() {
+        User user1 = new User();
+        String testName = faker.name().username();
+        user1.setUsername(testName);
+        testRepo.save(user1);
 
-        Answer answer2 = testRepo.findAnswerByTitle(testTitle);
+        User user2 = testRepo.findByUsername(testName);
 
-        assertThat(answer2).isEqualTo(answer1);
+        assertThat(user2).isEqualTo(user1);
     }
 }

@@ -63,12 +63,12 @@ public class InfoService {
     }
 
     public List<Info> getByDate(LocalDate date) {
-        return infoRepo.getByDate(date);
+        return infoRepo.findAllByDate(date);
     }
 
     public List<Answer> getTodayAnswersInfo() {
         return infoRepo
-                .getByDate(LocalDate.now())
+                .findAllByDate(LocalDate.now())
                 .stream()
                 .map(Info::getAnswer)
                 .collect(Collectors.toList());

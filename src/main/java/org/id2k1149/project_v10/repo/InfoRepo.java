@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 @Transactional(readOnly = true)
 public interface InfoRepo extends JpaRepository<Info, Long> {
-    List<Info> getByDate(LocalDate date);
-    List<Info> getByAnswer(Answer answer);
+    List<Info> findAllByDate(LocalDate date);
+    List<Info> findAllByAnswer(Answer answer);
+
 }
