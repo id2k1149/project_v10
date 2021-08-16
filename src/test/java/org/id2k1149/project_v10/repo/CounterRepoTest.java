@@ -1,10 +1,9 @@
 package org.id2k1149.project_v10.repo;
 
-import com.github.javafaker.DateAndTime;
 import com.github.javafaker.Faker;
 import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.Counter;
-import org.id2k1149.project_v10.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -25,6 +24,12 @@ class CounterRepoTest {
     @Autowired
     private AnswerRepo testAnswerRepo;
 
+    @AfterEach
+    void tearDown() {
+        testAnswerRepo.deleteAll();
+        testCounterRepo.deleteAll();
+    }
+
     @Test
     void findByDateAndAnswer() {
         Answer answer1 = new Answer();
@@ -43,7 +48,7 @@ class CounterRepoTest {
     }
 
     @Test
-    void findByDate() {
+    void findAllByDate() {
         Random random = new Random();
         int bound = random.nextInt(4) + 2;
         LocalDate ld = new java.sql.Date(new Date().getTime()).toLocalDate();
@@ -58,7 +63,7 @@ class CounterRepoTest {
             testCounterRepo.save(counter);
         });
 
-        List<Counter> list2 = testCounterRepo.findByDate(ld);
+        List<Counter> list2 = testCounterRepo.findAllByDate(ld);
 
         assertThat(list2).isEqualTo(list1);
     }

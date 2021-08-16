@@ -13,5 +13,5 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface CounterRepo extends JpaRepository<Counter, Long> {
     Optional<Counter> findByDateAndAnswer(LocalDate localDate, Answer answer);
-    List<Counter> findByDate(LocalDate localDate);
+    List<Counter> findAllByDate(LocalDate localDate);
 }
