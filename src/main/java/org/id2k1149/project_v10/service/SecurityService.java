@@ -1,4 +1,4 @@
-package org.id2k1149.project_v10.security;
+package org.id2k1149.project_v10.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
