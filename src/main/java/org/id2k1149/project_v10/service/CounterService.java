@@ -73,7 +73,7 @@ public class CounterService {
         voterService.checkVoter(newAnswer);
     }
 
-    public List<Counter> getResult() {
+    public List<Counter> getAllResults() {
         List<Counter> counterList = counterRepo.findAllByDate(LocalDate.now());
         if (counterList.size() == 0) return counterList;
 
@@ -81,11 +81,18 @@ public class CounterService {
                 .sorted(Comparator.comparingInt(Counter::getVotes).reversed())
                 .collect(Collectors.toList());
 
+        return sortedList;
+    }
+
+    public Counter getBestResult() {
+        List<Counter> sortedList = getAllResults();
         Counter bestResult = sortedList
                 .stream()
                 .max(Comparator.comparing(Counter::getVotes))
                 .orElseThrow(NoSuchElementException::new);
 
-        return sortedList;
+        return bestResult;
     }
+
+
 }
