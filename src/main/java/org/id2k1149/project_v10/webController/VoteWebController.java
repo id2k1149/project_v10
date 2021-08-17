@@ -6,11 +6,9 @@ import org.id2k1149.project_v10.model.Counter;
 import org.id2k1149.project_v10.model.Voter;
 import org.id2k1149.project_v10.service.CounterService;
 import org.id2k1149.project_v10.service.InfoService;
-import org.id2k1149.project_v10.service.UserService;
 import org.id2k1149.project_v10.service.VoterService;
 import org.id2k1149.project_v10.to.AnswerTo;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +25,6 @@ public class VoteWebController {
     private final InfoService infoService;
     private final CounterService counterService;
     private final VoterService voterService;
-    private final UserService userService;
 
     @GetMapping("/vote")
     public String survey(Model model) {
