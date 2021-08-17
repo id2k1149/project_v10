@@ -19,7 +19,7 @@
                 <li class="nav-item"><a class="nav-link" href="${contextPath}/result">Results</a></li>
                 <security:authorize access="hasAuthority('ROLE_ADMIN')">
                     <li class="nav-item">
-                        <a class="nav-link" href="${contextPath}/result">Get answers</a>
+                        <a class="nav-link" href="${contextPath}/answers">Get answers</a>
                     </li>
                 </security:authorize>
                 <li class="nav-item">
