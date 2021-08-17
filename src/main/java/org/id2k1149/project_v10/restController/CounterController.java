@@ -3,14 +3,11 @@ package org.id2k1149.project_v10.restController;
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.project_v10.model.Counter;
 import org.id2k1149.project_v10.service.CounterService;
-import org.id2k1149.project_v10.to.AnswerTo;
-import org.id2k1149.project_v10.util.AnswerUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -57,6 +54,12 @@ public class CounterController {
     @GetMapping(path = "today")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public List<Counter> getTodayResults() {
-        return counterService.getResult();
+        return counterService.getAllResults();
+    }
+
+    @GetMapping(path = "best")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+    public Counter getBestResult() {
+        return counterService.getBestResult();
     }
 }

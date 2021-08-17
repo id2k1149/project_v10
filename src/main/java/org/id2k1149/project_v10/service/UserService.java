@@ -89,6 +89,7 @@ public class UserService implements UserDetailsService {
         User userToUpdate;
         Optional<User> optionalUser = userRepo.findById(id);
         if (optionalUser.isEmpty()) {
+            log.error("User with id {} does not exist in DB", id);
             throw new NotFoundException(
                     "user with id " + id + " does not exist");
         } else {
@@ -112,13 +113,16 @@ public class UserService implements UserDetailsService {
         }
 
         userRepo.save(userToUpdate);
+        log.info("User {} was updated", user.getUsername());
     }
 
     public void deleteUser(Long id) {
         if(userRepo.findById(id).isEmpty()) {
+            log.error("User with id {} does not exist in DB", id);
             throw new NotFoundException(id + " does not exists");
         }
         userRepo.deleteById(id);
+        log.info("User {} was deleted", userRepo.getById(id).getUsername());
     }
 
     public User findUser() {
@@ -127,7 +131,7 @@ public class UserService implements UserDetailsService {
                 .getAuthentication()
                 .getPrincipal();
         String username = principal instanceof UserDetails ? ((UserDetails) principal).getUsername() : principal.toString();
-
+        log.info("User with name {} was found in DB", username);
         return userRepo.findByUsername(username);
     }
 
@@ -135,7 +139,6 @@ public class UserService implements UserDetailsService {
         User user = getUser(id);
         List<Voter> voterList = voterRepo.findAllByUser(user);
         List<VoterTo> voterToList = VoterUtil.getVoterTo(user, voterList);
-
         return new UserVotesTo(id, user.getUsername(), voterToList);
     }
 }
