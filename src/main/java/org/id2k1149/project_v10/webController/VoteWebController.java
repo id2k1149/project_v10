@@ -9,11 +9,14 @@ import org.id2k1149.project_v10.service.InfoService;
 import org.id2k1149.project_v10.service.UserService;
 import org.id2k1149.project_v10.service.VoterService;
 import org.id2k1149.project_v10.to.AnswerTo;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +31,7 @@ public class VoteWebController {
 
     @GetMapping("/vote")
     public String survey(Model model) {
-        List<AnswerTo> answersList = infoService.checkTime();
+        List<AnswerTo> answersList = infoService.checkTime(LocalDate.now());
         if (answersList.size() > 0) {
             model.addAttribute("answersList", answersList);
             Optional<Voter> optionalVoter = voterService.checkUser();
@@ -62,5 +65,12 @@ public class VoteWebController {
         if (sortedList.size() > 0) model.addAttribute("sortedList", sortedList);
         else model.addAttribute("error", "There are no results");
         return "result";
+    }
+
+    @GetMapping("/answers")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public String answers() {
+        infoService.getRandomInfo(LocalDate.now());
+        return "redirect:/vote";
     }
 }

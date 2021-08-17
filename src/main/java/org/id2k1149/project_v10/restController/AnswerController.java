@@ -59,7 +59,9 @@ public class AnswerController {
     @GetMapping("/today")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public List<AnswerTo> getTodayInfo() {
-        return AnswerUtil.getAnswersTo(infoService.getTodayAnswersInfo(), infoService.getByDate(LocalDate.now()));
+        return AnswerUtil.getAnswersTo(
+                infoService.getAnswersInfoByDate(LocalDate.now()),
+                infoService.getByDate(LocalDate.now()));
     }
 
     @GetMapping(path = "{id}/info")
