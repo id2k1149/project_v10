@@ -2,8 +2,10 @@ package org.id2k1149.project_v10.repo;
 
 import com.github.javafaker.Faker;
 import org.id2k1149.project_v10.model.Answer;
+import org.id2k1149.project_v10.model.Counter;
 import org.id2k1149.project_v10.model.Info;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -24,6 +26,16 @@ class InfoRepoTest {
     private InfoRepo testInfoRepo;
     @Autowired
     private AnswerRepo testAnswerRepo;
+
+    @BeforeEach
+    void setUp() {
+        IntStream.range(0, new Random().nextInt(4) + 2)
+                .mapToObj(i -> new Info()).forEach(info -> {
+            info.setAnswer(getRandomAnswer());
+//            info.setDate(getRandomDate());
+            testInfoRepo.save(info);
+        });
+    }
 
     @AfterEach
     void tearDown() {
@@ -47,53 +59,35 @@ class InfoRepoTest {
 
     @Test
     void findAllDate() {
-        LocalDate ld = getRandomDate();
-        List<Info> list1 = new ArrayList<>();
+        LocalDate date = getRandomDate();
+        List<Info> list = new ArrayList<>();
 
-        Random random = new Random();
-        int bound = random.nextInt(4) + 2;
-        IntStream.range(0, bound).mapToObj(i -> new Info()).forEach(info -> {
-            info.setDate(ld);
+        IntStream.range(0, new Random().nextInt(4) + 2)
+                .mapToObj(i -> new Info()).forEach(info -> {
+            info.setDate(date);
             info.setAnswer(getRandomAnswer());
-            list1.add(info);
+            list.add(info);
             testInfoRepo.save(info);
         });
 
-        random = new Random();
-        bound = random.nextInt(4) + 2;
-        IntStream.range(0, bound).mapToObj(i -> new Info()).forEach(info -> {
-            info.setDate(getRandomDate());
-            info.setAnswer(getRandomAnswer());
-            testInfoRepo.save(info);
-        });
-
-        List<Info> list2 = testInfoRepo.findAllByDate(ld);
-        assertThat(list2).isEqualTo(list1);
+        List<Info> list2 = testInfoRepo.findAllByDate(date);
+        assertThat(list2).isEqualTo(list);
     }
 
     @Test
     void findAllByAnswer() {
-        Answer answer1 = getRandomAnswer();
-        List<Info> list1 = new ArrayList<>();
+        Answer answer = getRandomAnswer();
+        List<Info> list = new ArrayList<>();
 
-        Random random = new Random();
-        int bound = random.nextInt(4) + 2;
-        IntStream.range(0, bound).mapToObj(i -> new Info()).forEach(info -> {
+        IntStream.range(0, new Random().nextInt(4) + 2)
+                .mapToObj(i -> new Info()).forEach(info -> {
             info.setDate(getRandomDate());
-            info.setAnswer(answer1);
-            list1.add(info);
+            info.setAnswer(answer);
+            list.add(info);
             testInfoRepo.save(info);
         });
 
-        random = new Random();
-        bound = random.nextInt(4) + 2;
-        IntStream.range(0, bound).mapToObj(i -> new Info()).forEach(info -> {
-            info.setDate(getRandomDate());
-            info.setAnswer(getRandomAnswer());
-            testInfoRepo.save(info);
-        });
-
-        List<Info> list2 = testInfoRepo.findAllByAnswer(answer1);
-        assertThat(list2).isEqualTo(list1);
+        List<Info> list2 = testInfoRepo.findAllByAnswer(answer);
+        assertThat(list2).isEqualTo(list);
     }
 }
