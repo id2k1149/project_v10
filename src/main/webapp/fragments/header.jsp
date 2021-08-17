@@ -17,14 +17,19 @@
                                         href="${contextPath}/welcome">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="${contextPath}/vote">Vote</a></li>
                 <li class="nav-item"><a class="nav-link" href="${contextPath}/result">Results</a></li>
+                <security:authorize access="hasAuthority('ROLE_ADMIN')">
+                    <li class="nav-item">
+                        <a class="nav-link" href="${contextPath}/result">Get answers</a>
+                    </li>
+                </security:authorize>
                 <li class="nav-item">
                     <c:if test="${pageContext.request.userPrincipal.name != null}">
                         <form id="logoutForm" method="POST" action="${contextPath}/logout">
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <a class="nav-link"
-                               onclick="document.forms['logoutForm'].submit()">${pageContext.request.userPrincipal.name} -> Logout</a>
+                               onclick="document.forms['logoutForm'].submit()">${pageContext.request.userPrincipal.name}
+                                -> Logout</a>
                         </form>
-
                     </c:if>
                 </li>
             </ul>
