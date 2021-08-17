@@ -92,38 +92,28 @@ public class InfoService {
         if (optionalInfo.size() > 0) {
             return;
         } else {
-            Random random = new Random();
-
             List<Answer> allAnswers = answerRepo.findAll();
-            int max = allAnswers.size();
-            int min = 2;
-            int numberOfElements = random.nextInt((max - min) + 1) + min;
-
             List<Answer> answers = new ArrayList<>();
-            for (int i = 0; i < numberOfElements; i++) {
-                int randomIndex = random.nextInt(allAnswers.size());
+            IntStream.range(0, new Random().nextInt((allAnswers.size() - 2) + 1) + 2)
+                    .map(i -> new Random().nextInt(allAnswers.size())).forEach(randomIndex -> {
                 Answer randomAnswer = allAnswers.get(randomIndex);
                 allAnswers.remove(randomIndex);
                 answers.add(randomAnswer);
-            }
+            });
 
-            for (Answer todayAnswer : answers) {
+            answers.forEach(answer -> {
                 Info newInfo = new Info();
                 newInfo.setDate(date);
-                newInfo.setAnswer(todayAnswer);
-
-                max = 5;
-                min = 2;
-                numberOfElements = random.nextInt((max - min) + 1) + min;
+                newInfo.setAnswer(answer);
                 Map<String, BigDecimal> descriptionMap = new HashMap<>();
-                for (int i = 0; i < numberOfElements; i++) {
-                    String stringInfo = new Faker().food().dish();
-                    BigDecimal digitalInfo = BigDecimal.valueOf(Double.valueOf(new Faker().commerce().price(10, 100)));
+                IntStream.range(0, new Random().nextInt(4) + 2)
+                        .mapToObj(i -> new Faker().food().dish()).forEach(stringInfo -> {
+                    BigDecimal digitalInfo = BigDecimal.valueOf(Double.parseDouble(new Faker().commerce().price(10, 100)));
                     descriptionMap.put(stringInfo, digitalInfo);
-                }
+                });
                 newInfo.setDetails(descriptionMap);
                 infoRepo.save(newInfo);
-            }
+            });
         }
     }
 }
