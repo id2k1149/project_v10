@@ -12,7 +12,7 @@
 <jsp:include page="fragments/header.jsp"/>
 <!-- Page content-->
 <div class="container">
-    <div class="row mb-4" data-aos="fade-up" data-aos-delay="200">
+    <div class="row mb-4">
         <div class="col-lg-6 mr-auto">
             <h1>Survey for your company</h1>
             <p class="mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit,

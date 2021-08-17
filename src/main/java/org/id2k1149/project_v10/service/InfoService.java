@@ -84,7 +84,7 @@ public class InfoService {
         return answerToList;
     }
 
-    public void getRandomInfo(LocalDate date) {
+    public void update(LocalDate date) {
 //        LocalDate date = LocalDate.now().minusDays(4);
 
         List<Info> optionalInfo = infoRepo.findAllByDate(date);

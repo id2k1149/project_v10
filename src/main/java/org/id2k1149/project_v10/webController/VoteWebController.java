@@ -36,11 +36,7 @@ public class VoteWebController {
             model.addAttribute("answersList", answersList);
             Optional<Voter> optionalVoter = voterService.checkUser();
             if (optionalVoter.isPresent()) {
-                model.addAttribute("error1", "You voted today.");
-                UserDetails userDetails = userService.loadUserByUsername(optionalVoter.get().getUser().getUsername());
-                log.info(String.valueOf(userDetails.getAuthorities()));
-                model.addAttribute("username", optionalVoter.get().getUser().getUsername().toUpperCase());
-                model.addAttribute("role", userDetails.getAuthorities());
+                model.addAttribute("error1", "you voted today...");
             }
         } else {
             model.addAttribute("error2", "It is too late to vote.");
@@ -67,10 +63,10 @@ public class VoteWebController {
         return "result";
     }
 
-    @GetMapping("/answers")
+    @GetMapping("/update")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String answers() {
-        infoService.getRandomInfo(LocalDate.now());
+    public String update() {
+        infoService.update(LocalDate.now());
         return "redirect:/vote";
     }
 }

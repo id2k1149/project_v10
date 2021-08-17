@@ -18,11 +18,11 @@
         </div>
 
         <c:if test="${error1 != null}">
-            <h1>${role}</h1>
-            <p style="color:#0d6efd"><strong>${username}, ${error1}</strong></p>
+<%--            <h1>${role}</h1>--%>
+            <p style="color:#337ab7"><strong>${pageContext.request.userPrincipal.name.toUpperCase()}, ${error1}</strong></p>
         </c:if>
         <c:if test="${error2 != null}">
-            <p style="color:#0d6efd"><strong>${error2}</strong></p>
+            <p style="color:#337ab7"><strong>${error2}</strong></p>
         </c:if>
 
         <form action="vote" method="post">

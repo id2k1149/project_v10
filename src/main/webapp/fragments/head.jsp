@@ -13,10 +13,17 @@
     <link rel="icon" type="image/x-icon" href="${contextPath}/resources/static/assets/favicon.ico" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="${contextPath}/resources/static/css/styles.css" rel="stylesheet" />
+
     <style>
         body {
             background-color: #3e3e3e;
             color: white;
+        }
+        .btn.btn-primary {
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+            border-radius: 30px;
         }
     </style>
 </head>

@@ -7,33 +7,34 @@
 <!-- Responsive navbar-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="#">Company polls</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
-                class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" aria-current="page"
-                                        href="${contextPath}/welcome">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="${contextPath}/vote">Vote</a></li>
-                <li class="nav-item"><a class="nav-link" href="${contextPath}/result">Results</a></li>
-                <security:authorize access="hasAuthority('ROLE_ADMIN')">
+        <a class="navbar-brand" href="${contextPath}/welcome">Company polls</a>
+        <c:if test="${pageContext.request.userPrincipal.name != null}">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                    class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="${contextPath}/vote">Vote</a></li>
+                    <li class="nav-item"><a class="nav-link" href="${contextPath}/result">Results</a></li>
+                    <security:authorize access="hasAuthority('ROLE_ADMIN')">
+                        <li class="nav-item">
+                            <a class="nav-link active" style="color:#337ab7" href="${contextPath}/update">UPDATE</a>
+                        </li>
+                    </security:authorize>
                     <li class="nav-item">
-                        <a class="nav-link" href="${contextPath}/answers">Get answers</a>
+                        <c:if test="${pageContext.request.userPrincipal.name != null}">
+                            <form id="logoutForm" method="POST" action="${contextPath}/logout">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                <a class="nav-link"
+                                   onclick="document.forms['logoutForm'].submit()">${pageContext.request.userPrincipal.name}
+                                    -> Logout</a>
+                            </form>
+                        </c:if>
                     </li>
-                </security:authorize>
-                <li class="nav-item">
-                    <c:if test="${pageContext.request.userPrincipal.name != null}">
-                        <form id="logoutForm" method="POST" action="${contextPath}/logout">
-                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                            <a class="nav-link"
-                               onclick="document.forms['logoutForm'].submit()">${pageContext.request.userPrincipal.name}
-                                -> Logout</a>
-                        </form>
-                    </c:if>
-                </li>
-            </ul>
-        </div>
+                </ul>
+            </div>
+        </c:if>
     </div>
 </nav>
 <br>
