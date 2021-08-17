@@ -79,16 +79,15 @@ public class InfoService {
 
     public List<AnswerTo> checkTime(LocalDate date) {
         List<AnswerTo> answerToList = new ArrayList<>();
-        if (LocalTime.now().getHour() < 23) answerToList = AnswerUtil.getAnswersTo(getAnswersInfoByDate(date),
-                getByDate(LocalDate.now()));
+        if (LocalTime.now().getHour() < 23)
+            answerToList = AnswerUtil
+                    .getAnswersTo(getAnswersInfoByDate(date), getByDate(LocalDate.now()));
         return answerToList;
     }
 
     public void update(LocalDate date) {
 //        LocalDate date = LocalDate.now().minusDays(4);
-
         List<Info> optionalInfo = infoRepo.findAllByDate(date);
-
         if (optionalInfo.size() > 0) {
             return;
         } else {
@@ -100,7 +99,6 @@ public class InfoService {
                 allAnswers.remove(randomIndex);
                 answers.add(randomAnswer);
             });
-
             answers.forEach(answer -> {
                 Info newInfo = new Info();
                 newInfo.setDate(date);
