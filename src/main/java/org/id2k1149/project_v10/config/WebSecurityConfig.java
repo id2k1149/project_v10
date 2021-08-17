@@ -1,7 +1,6 @@
 package org.id2k1149.project_v10.config;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,56 +31,45 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    /*
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/", "/welcome", "/resources/**", "/registration").permitAll();
-        http.authorizeRequests()
-                .antMatchers("/api/v1/**").hasAuthority("ROLE_ADMIN")
-//                .antMatchers("/new").hasAnyAuthority("ADMIN", "CREATOR")
-//                .antMatchers("/edit/**").hasAnyAuthority("ADMIN", "EDITOR")
-//                .antMatchers("/delete/**").hasAuthority("ADMIN")
-                .anyRequest().authenticated();
         http
-                .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .defaultSuccessUrl("/vote", true)
-                .and()
-                .logout().permitAll()
-                .and()
-                .exceptionHandling().accessDeniedPage("/403")
-        ;
-    }
+            .csrf().disable();
+        http
+            .authorizeRequests()
+            .antMatchers("/", "/welcome", "/resources/**", "/registration").permitAll();
+        http
+            .authorizeRequests()
+            .antMatchers(GET, "/api/v1/**")
+            .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+            .and().httpBasic();
+        http
+            .authorizeRequests()
+            .antMatchers(POST, "/api/v1/**")
+            .hasAuthority("ROLE_ADMIN")
+            .and().httpBasic();
+        http
+            .authorizeRequests()
+            .antMatchers(PUT, "/api/v1/**")
+            .hasAuthority("ROLE_ADMIN")
+            .and().httpBasic();
+        http
+            .authorizeRequests()
+            .antMatchers(DELETE, "/api/v1/**")
+            .hasAuthority("ROLE_ADMIN")
+            .and().httpBasic();
 
-     */
-
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.authorizeRequests().antMatchers("/", "/welcome", "/resources/**", "/registration").permitAll();
-        http.authorizeRequests().antMatchers("/api/v1/**").permitAll();
-//        http.authorizeRequests().antMatchers(DELETE, "/api/v1/users/**").hasAuthority("ROLE_ADMIN");
-
-//        http.authorizeRequests().antMatchers("/api/login/**").permitAll();
-//        http.authorizeRequests().antMatchers(GET, "/api/v1/**").hasAnyAuthority("ROLE_USER");
-//        http.authorizeRequests().antMatchers(GET,"/api/v1/**").hasAnyAuthority();
-
-//        http.authorizeRequests().antMatchers(PUT, "/api/v1/**").hasAuthority("ROLE_ADMIN");
-//        http.authorizeRequests().antMatchers(POST, "/api/v1/**").hasAuthority("ROLE_ADMIN");
-        http.authorizeRequests().anyRequest().authenticated();
-
-        http.formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .defaultSuccessUrl("/vote", true)
-                .and()
-
+        http
+            .authorizeRequests()
+            .anyRequest()
+            .authenticated()
+            .and()
+            .formLogin()
+            .loginPage("/login")
+            .permitAll()
+            .defaultSuccessUrl("/vote", true)
+            .and()
             .logout()
             .permitAll();
           }
-
-
-
 }
