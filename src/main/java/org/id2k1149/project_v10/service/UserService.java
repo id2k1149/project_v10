@@ -49,14 +49,6 @@ public class UserService implements UserDetailsService {
                 );
     }
 
-    /*
-    public User saveUser(User user) {
-        log.info("Saving new user {} to DB", user.getUsername());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepo.save(user);
-    }
-     */
-
     public User findByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findByUsername(username);
     }
@@ -82,11 +74,12 @@ public class UserService implements UserDetailsService {
             log.error("The name {} is already used", user.getUsername());
             throw new BadRequestException("The name " + user.getUsername() + " is already used");
         }
-        log.info("Add a new user {} to DB", user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.USER);
-//        user.setRole(Role.ADMIN);
+        if (user.getRole() == null) {
+            user.setRole(Role.USER);
+        }
         userRepo.save(user);
+        log.info("Add a new user {} to DB", user.getUsername());
         return user;
     }
 
