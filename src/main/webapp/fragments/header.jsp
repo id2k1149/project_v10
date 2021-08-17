@@ -23,14 +23,12 @@
                         </li>
                     </security:authorize>
                     <li class="nav-item">
-                        <c:if test="${pageContext.request.userPrincipal.name != null}">
-                            <form id="logoutForm" method="POST" action="${contextPath}/logout">
-                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                                <a class="nav-link"
-                                   onclick="document.forms['logoutForm'].submit()">${pageContext.request.userPrincipal.name}
-                                    -> Logout</a>
-                            </form>
-                        </c:if>
+                        <form id="logoutForm" method="POST" action="${contextPath}/logout">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                            <a class="nav-link"
+                               onclick="document.forms['logoutForm'].submit()">${pageContext.request.userPrincipal.name}
+                                -> Logout</a>
+                        </form>
                     </li>
                 </ul>
             </div>
