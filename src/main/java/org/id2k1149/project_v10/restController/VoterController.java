@@ -29,7 +29,7 @@ public class VoterController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public void addVoter(@RequestBody Voter newVoter) {
         voterService.addVoter(newVoter);
     }

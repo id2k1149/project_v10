@@ -37,7 +37,6 @@ public class UserController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<User> addUser(@RequestBody User user) {
         User created = userService.addUser(user);
         URI uriOfNewResource = URI.create(ServletUriComponentsBuilder

@@ -13,6 +13,7 @@ import org.id2k1149.project_v10.util.InfoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +58,12 @@ public class AnswerService {
 
     public AnswerTo getAllInfoForAnswer(Long id) {
         List<Info> infoList = infoRepo.findAllByAnswer(getAnswer(id));
+        List<InfoTo> infoToList = InfoUtil.getInfoTo(getAnswer(id), infoList);
+        return new AnswerTo(id, getAnswer(id).getTitle(), infoToList);
+    }
+
+    public AnswerTo getTodayInfoForAnswer(Long id) {
+        List<Info> infoList = infoRepo.findAllByDate(LocalDate.now());
         List<InfoTo> infoToList = InfoUtil.getInfoTo(getAnswer(id), infoList);
         return new AnswerTo(id, getAnswer(id).getTitle(), infoToList);
     }

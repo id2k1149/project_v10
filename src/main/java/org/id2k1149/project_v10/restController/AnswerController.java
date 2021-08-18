@@ -2,6 +2,7 @@ package org.id2k1149.project_v10.restController;
 
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.project_v10.model.Answer;
+import org.id2k1149.project_v10.model.Info;
 import org.id2k1149.project_v10.service.AnswerService;
 import org.id2k1149.project_v10.service.InfoService;
 import org.id2k1149.project_v10.to.AnswerTo;
@@ -68,5 +69,19 @@ public class AnswerController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public AnswerTo getAllInfoForAnswer(@PathVariable Long id) {
         return answerService.getAllInfoForAnswer(id);
+    }
+
+    @GetMapping(path = "{id}/info/today")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+    public AnswerTo getTodayInfoForAnswer(@PathVariable Long id) {
+        return answerService.getTodayInfoForAnswer(id);
+    }
+
+    @PostMapping(path = "{id}/info", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void addInfoForAnswer(
+            @RequestBody Info info,
+            @PathVariable Long id) {
+        infoService.addInfo(info, id);
     }
 }
