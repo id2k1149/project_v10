@@ -118,11 +118,10 @@ public class UserService implements UserDetailsService {
 
     public void deleteUser(Long id) {
         if(userRepo.findById(id).isEmpty()) {
-            log.error("User with id {} does not exist in DB", id);
             throw new NotFoundException(id + " does not exists");
         }
-        userRepo.deleteById(id);
         log.info("User {} was deleted", userRepo.getById(id).getUsername());
+        userRepo.deleteById(id);
     }
 
     public User findUser() {
