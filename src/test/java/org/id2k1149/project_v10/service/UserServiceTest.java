@@ -53,7 +53,6 @@ class UserServiceTest {
             testUser.setPassword(faker.internet().password());
             testUserService.addUser(testUser);
         });
-        System.out.println(testUserService.getUsers().size());
     }
 
     @AfterEach
