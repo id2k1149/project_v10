@@ -29,7 +29,7 @@ public class CounterController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public void addCounter(@RequestBody Counter newCounter) {
         counterService.addCounter(newCounter);
     }
