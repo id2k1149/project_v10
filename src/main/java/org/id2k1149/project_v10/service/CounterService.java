@@ -2,12 +2,12 @@ package org.id2k1149.project_v10.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.id2k1149.project_v10.exception.NotFoundException;
 import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.Counter;
 import org.id2k1149.project_v10.repo.CounterRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -28,9 +28,7 @@ public class CounterService {
     }
 
     public Counter getCounter(Long id) {
-        if (counterRepo.findById(id).isEmpty()) {
-            throw new NotFoundException(id + " does not exist");
-        }
+        assert counterRepo.findById(id).isPresent() : id + " does not exist";
         return counterRepo.getById(id);
     }
 
@@ -39,9 +37,7 @@ public class CounterService {
     }
 
     public void updateCounter(Long id, Counter counter) {
-        if (counterRepo.findById(id).isEmpty()) {
-            throw new NotFoundException(id + " does not exist");
-        }
+        assert counterRepo.findById(id).isPresent() : id + " does not exist";
         Counter counterToUpdate = counterRepo.findById(id).get();
         counterToUpdate.setAnswer(counter.getAnswer());
         counterToUpdate.setDate(counter.getDate());
@@ -50,9 +46,7 @@ public class CounterService {
     }
 
     public void deleteCounter(Long id) {
-        if (counterRepo.findById(id).isEmpty()) {
-            throw new NotFoundException(id + " does not exists");
-        }
+        assert counterRepo.findById(id).isPresent() : id + " does not exists";
         counterRepo.deleteById(id);
     }
 

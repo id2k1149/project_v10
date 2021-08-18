@@ -19,10 +19,10 @@
 
         <c:if test="${error1 != null}">
 <%--            <h1>${role}</h1>--%>
-            <p style="color:#337ab7"><strong>${pageContext.request.userPrincipal.name.toUpperCase()}, ${error1}</strong></p>
+            <p style="color:#337ab7"><strong>${pageContext.request.userPrincipal.name.toUpperCase()}, ${info1}</strong></p>
         </c:if>
         <c:if test="${error2 != null}">
-            <p style="color:#337ab7"><strong>${error2}</strong></p>
+            <p style="color:#337ab7"><strong>${info2}</strong></p>
         </c:if>
 
         <form action="vote" method="post">
@@ -52,10 +52,10 @@
                 <br>
             </c:forEach>
             <br>
-            <c:if test="${error2 == null}">
+            <c:if test="${info2 == null}">
                 <input type="submit" class="btn btn-primary" value="Vote"/>
             </c:if>
-            <c:if test="${error2 != null}">
+            <c:if test="${info2 != null}">
                 <a href="${contextPath}/result" class="btn btn-primary mr-2 mb-2">
                     Result
                 </a>

@@ -39,7 +39,6 @@ public class UserValidator implements Validator {
             errors.rejectValue("password", "Size.userForm.password");
             log.error("wrong password length");
         }
-
         if (!user.getPasswordConfirm().equals(user.getPassword())) {
             errors.rejectValue("passwordConfirm", "Diff.userForm.passwordConfirm");
             log.error("passwords don't match");

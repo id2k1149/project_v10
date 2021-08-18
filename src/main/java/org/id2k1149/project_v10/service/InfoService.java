@@ -3,7 +3,6 @@ package org.id2k1149.project_v10.service;
 import com.github.javafaker.Faker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.id2k1149.project_v10.exception.NotFoundException;
 import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.Info;
 import org.id2k1149.project_v10.repo.AnswerRepo;
@@ -33,24 +32,18 @@ public class InfoService {
     }
 
     public Info getInfo(Long id) {
-        if (infoRepo.findById(id).isEmpty()) {
-            throw new NotFoundException(id + " does not exist");
-        }
+        assert infoRepo.findById(id).isPresent() : id + " does not exist";
         return infoRepo.getById(id);
     }
 
     public void addInfo(Info newInfo, Long answerId) {
-        if (answerRepo.findById(answerId).isEmpty()) {
-            throw new NotFoundException(answerId + " does not exist");
-        }
+        assert answerRepo.findById(answerId).isPresent() : answerId + " does not exist";
         newInfo.setAnswer(answerRepo.getById(answerId));
         infoRepo.save(newInfo);
     }
 
     public void updateInfo(Info info, Long id) {
-        if (infoRepo.findById(id).isEmpty()) {
-            throw new NotFoundException(id + " does not exist");
-        }
+        assert infoRepo.findById(id).isPresent() : id + " does not exist";
         Info infoToUpdate = infoRepo.findById(id).get();
         infoToUpdate.setAnswer(info.getAnswer());
         infoToUpdate.setDate(info.getDate());
@@ -59,9 +52,7 @@ public class InfoService {
     }
 
     public void deleteInfo(Long id) {
-        if (infoRepo.findById(id).isEmpty()) {
-            throw new NotFoundException(id + " does not exists");
-        }
+        assert infoRepo.findById(id).isPresent() : id + " does not exists";
         infoRepo.deleteById(id);
     }
 
@@ -77,16 +68,16 @@ public class InfoService {
                 .collect(Collectors.toList());
     }
 
-    public List<AnswerTo> checkTime(LocalDate date) {
-        List<AnswerTo> answerToList = new ArrayList<>();
-        if (LocalTime.now().getHour() < 23)
-            answerToList = AnswerUtil
-                    .getAnswersTo(getAnswersInfoByDate(date), getByDate(LocalDate.now()));
-        return answerToList;
+    public boolean checkTime() {
+        return (LocalTime.now().getHour() < 23) ;
+    }
+
+    public List<AnswerTo> vote() {
+        return AnswerUtil
+                .getAnswersTo(getAnswersInfoByDate(LocalDate.now()), getByDate(LocalDate.now()));
     }
 
     public void update(LocalDate date) {
-//        LocalDate date = LocalDate.now().minusDays(4);
         List<Info> optionalInfo = infoRepo.findAllByDate(date);
         if (optionalInfo.size() > 0) {
             return;
