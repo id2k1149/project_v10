@@ -13,5 +13,4 @@ import java.util.List;
 public interface InfoRepo extends JpaRepository<Info, Long> {
     List<Info> findAllByDate(LocalDate date);
     List<Info> findAllByAnswer(Answer answer);
-
 }

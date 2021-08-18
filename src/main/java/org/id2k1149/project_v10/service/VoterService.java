@@ -29,9 +29,7 @@ public class VoterService {
     }
 
     public Voter getVoter(Long id) {
-        if (voterRepo.findById(id).isEmpty()) {
-            throw new NotFoundException(id + " does not exist");
-        }
+        assert voterRepo.findById(id).isPresent() : id + " does not exist";
         return voterRepo.getById(id);
     }
 
@@ -40,9 +38,7 @@ public class VoterService {
     }
 
     public void updateVoter(Long id, Voter voter) {
-        if (voterRepo.findById(id).isEmpty()) {
-            throw new NotFoundException(id + " does not exist");
-        }
+        assert voterRepo.findById(id).isPresent() : id + " does not exist";
         Voter voterToUpdate = voterRepo.findById(id).get();
         voterToUpdate.setAnswer(voter.getAnswer());
         voterToUpdate.setDate(voter.getDate());
@@ -51,9 +47,7 @@ public class VoterService {
     }
 
     public void deleteVoter(Long id) {
-        if (voterRepo.findById(id).isEmpty()) {
-            throw new NotFoundException(id + " does not exists");
-        }
+        assert voterRepo.findById(id).isPresent() : id + " does not exists";
         voterRepo.deleteById(id);
     }
 

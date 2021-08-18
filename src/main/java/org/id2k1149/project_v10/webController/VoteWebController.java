@@ -28,16 +28,21 @@ public class VoteWebController {
 
     @GetMapping("/vote")
     public String survey(Model model) {
-        List<AnswerTo> answersList = infoService.checkTime(LocalDate.now());
-        if (answersList.size() > 0) {
-            model.addAttribute("answersList", answersList);
-            Optional<Voter> optionalVoter = voterService.checkUser();
-            if (optionalVoter.isPresent()) {
-                model.addAttribute("error1", "you voted today...");
+        if (infoService.checkTime()) {
+            List<AnswerTo> answersList = infoService.vote();
+            if (answersList.size() > 0) {
+                model.addAttribute("answersList", answersList);
+                Optional<Voter> optionalVoter = voterService.checkUser();
+                if (optionalVoter.isPresent()) {
+                    model.addAttribute("info1", "you voted today...");
+                }
+            } else {
+                model.addAttribute("info2", "There are no polls today");
+                log.info("There are no polls today");
             }
         } else {
-            model.addAttribute("error2", "It is too late to vote.");
-            log.error("It is too late to vote.");
+            model.addAttribute("info2", "It is too late to vote.");
+            log.info("It is too late to vote.");
         }
         return "vote";
     }
