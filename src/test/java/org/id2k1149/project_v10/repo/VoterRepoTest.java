@@ -1,7 +1,9 @@
 package org.id2k1149.project_v10.repo;
 
 import com.github.javafaker.Faker;
-import org.id2k1149.project_v10.model.*;
+import org.id2k1149.project_v10.model.Answer;
+import org.id2k1149.project_v10.model.User;
+import org.id2k1149.project_v10.model.Voter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,11 +19,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class VoterRepoTest {
-    private final Faker faker = new Faker();
+
     @Autowired
     private VoterRepo testVoterRepo;
     @Autowired
@@ -56,14 +57,14 @@ class VoterRepoTest {
 
     public Answer getRandomAnswer() {
         Answer answer = new Answer();
-        answer.setTitle(faker.beer().name());
+        answer.setTitle(new Faker().beer().name());
         testAnswerRepo.save(answer);
         return answer;
     }
 
     public User getRandomUser() {
         User user = new User();
-        user.setUsername(faker.name().username());
+        user.setUsername(new Faker().name().username());
         testUserRepo.save(user);
         return user;
     }

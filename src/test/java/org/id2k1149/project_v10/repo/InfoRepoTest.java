@@ -21,7 +21,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 class InfoRepoTest {
-    private final Faker faker = new Faker();
+
     @Autowired
     private InfoRepo testInfoRepo;
     @Autowired
@@ -52,7 +52,7 @@ class InfoRepoTest {
 
     public Answer getRandomAnswer() {
         Answer answer = new Answer();
-        answer.setTitle(faker.beer().name());
+        answer.setTitle(new Faker().beer().name());
         testAnswerRepo.save(answer);
         return answer;
     }
@@ -89,5 +89,18 @@ class InfoRepoTest {
 
         List<Info> list2 = testInfoRepo.findAllByAnswer(answer);
         assertThat(list2).isEqualTo(list);
+    }
+
+    @Test
+    void findByDateAndAnswer() {
+        LocalDate date = getRandomDate();
+        Answer answer = getRandomAnswer();
+        Info info = new Info();
+        info.setDate(date);
+        info.setAnswer(answer);
+        testInfoRepo.save(info);
+
+        Info info2 = testInfoRepo.findByDateAndAnswer(date, answer).get();
+        assertThat(info2).isEqualTo(info);
     }
 }

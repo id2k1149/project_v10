@@ -15,14 +15,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 class AnswerRepoTest {
-    private final Faker faker = new Faker();
 
     @Autowired
     private AnswerRepo testAnswerRepo;
 
     public Answer getRandomAnswer() {
         Answer answer = new Answer();
-        answer.setTitle(faker.beer().name());
+        answer.setTitle(new Faker().company().name() + "Co");
         testAnswerRepo.save(answer);
         return answer;
     }
@@ -43,6 +42,7 @@ class AnswerRepoTest {
     void findAnswerByTitle() {
         Answer answer = getRandomAnswer();
         String testTitle = answer.getTitle();
+
         testAnswerRepo.save(answer);
 
         Answer answer2 = testAnswerRepo.findAnswerByTitle(testTitle);

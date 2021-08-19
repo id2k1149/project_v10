@@ -17,12 +17,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.id2k1149.project_v10.model.Role.ADMIN;
+import static org.id2k1149.project_v10.model.Role.USER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
@@ -46,19 +49,18 @@ class UserServiceTest {
     void setUp() {
         bCryptPasswordEncoder = new BCryptPasswordEncoder();
         testUserService = new UserService(userRepo, bCryptPasswordEncoder, voterRepo);
-        Random random = new Random();
-        int bound = random.nextInt(4) + 2;
+        int bound = new Random().nextInt(4) + 2;
         IntStream.range(0, bound).mapToObj(i -> new User()).forEach(testUser -> {
-            testUser.setUsername(faker.name().username());
-            testUser.setPassword(faker.internet().password());
+            testUser.setUsername(new Faker().name().username());
+            testUser.setPassword(new Faker().internet().password());
             testUserService.addUser(testUser);
         });
     }
 
-    @AfterEach
-    void tearDown() {
-        userRepo.deleteAll();
-    }
+//    @AfterEach
+//    void tearDown() {
+//        userRepo.deleteAll();
+//    }
 
     @Test
     void getUsers() {
