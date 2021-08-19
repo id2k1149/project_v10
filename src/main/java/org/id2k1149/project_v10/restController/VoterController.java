@@ -28,10 +28,17 @@ public class VoterController {
         return voterService.getVoter(id);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+//    public void addVoter(@RequestBody Voter newVoter) {
+//        voterService.addVoter(newVoter);
+//    }
+
+    @PostMapping(path = "/{answerId}/", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public void addVoter(@RequestBody Voter newVoter) {
-        voterService.addVoter(newVoter);
+    public void vote(@RequestBody Voter voter,
+                     @PathVariable Long answerId) {
+        voterService.vote(voter, answerId);
     }
 
     @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

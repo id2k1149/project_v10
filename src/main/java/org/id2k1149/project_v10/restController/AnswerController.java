@@ -3,7 +3,9 @@ package org.id2k1149.project_v10.restController;
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.Info;
+import org.id2k1149.project_v10.model.Voter;
 import org.id2k1149.project_v10.service.AnswerService;
+import org.id2k1149.project_v10.service.CounterService;
 import org.id2k1149.project_v10.service.InfoService;
 import org.id2k1149.project_v10.to.AnswerTo;
 import org.id2k1149.project_v10.util.AnswerUtil;
@@ -21,6 +23,7 @@ import java.util.List;
 public class AnswerController {
     private final AnswerService answerService;
     private final InfoService infoService;
+    private final CounterService counterService;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
@@ -71,17 +74,25 @@ public class AnswerController {
         return answerService.getAllInfoForAnswer(id);
     }
 
-    @GetMapping(path = "{id}/info/today")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public AnswerTo getTodayInfoForAnswer(@PathVariable Long id) {
-        return answerService.getTodayInfoForAnswer(id);
-    }
-
     @PostMapping(path = "{id}/info", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void addInfoForAnswer(
             @RequestBody Info info,
             @PathVariable Long id) {
         infoService.addInfo(info, id);
+    }
+
+    @GetMapping(path = "{id}/today")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+    public AnswerTo getTodayInfoForAnswer(@PathVariable Long id) {
+        return answerService.getTodayInfoForAnswer(id);
+    }
+
+
+    @PostMapping(path = "{id}/vote", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+    public void voteForAnswer(
+            @PathVariable Long id) {
+        counterService.voteForAnswer(id);
     }
 }
