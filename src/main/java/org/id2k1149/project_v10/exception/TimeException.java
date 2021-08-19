@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY, reason = "Time limit")
 public class TimeException extends RuntimeException {
-    public TimeException(String message) {
-        super(message);
+    public TimeException(String msg) {
+        super(msg);
     }
 }

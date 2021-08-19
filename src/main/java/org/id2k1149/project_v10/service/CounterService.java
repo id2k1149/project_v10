@@ -78,10 +78,9 @@ public class CounterService {
 
     public List<Counter> getAllResults() {
         List<Counter> counterList = counterRepo.findAllByDate(LocalDate.now());
-        if (counterList.size() == 0) return counterList;
-        return counterList.stream()
+        return (counterList.size() == 0 ? counterList : counterList.stream()
                 .sorted(Comparator.comparingInt(Counter::getVotes).reversed())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     public Counter getBestResult() {

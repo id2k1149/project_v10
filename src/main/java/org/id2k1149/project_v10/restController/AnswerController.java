@@ -3,7 +3,6 @@ package org.id2k1149.project_v10.restController;
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.Info;
-import org.id2k1149.project_v10.model.Voter;
 import org.id2k1149.project_v10.service.AnswerService;
 import org.id2k1149.project_v10.service.CounterService;
 import org.id2k1149.project_v10.service.InfoService;

@@ -76,8 +76,4 @@ public class VoterService {
         voter.setUser(user);
         return voterRepo.findByUserAndDate(user, LocalDate.now());
     }
-
-    public void vote(Voter voter, Long answerId) {
-
-    }
 }
