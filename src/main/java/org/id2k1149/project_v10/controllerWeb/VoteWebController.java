@@ -1,4 +1,4 @@
-package org.id2k1149.project_v10.webController;
+package org.id2k1149.project_v10.controllerWeb;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +29,7 @@ public class VoteWebController {
 
     @GetMapping("/vote")
     public String survey(Model model) {
-        if (infoService.checkTime()) {
+        if (LocalTime.now().getHour() < 23) {
             List<AnswerTo> answersList = infoService.vote();
             if (answersList.size() > 0) {
                 model.addAttribute("answersList", answersList);

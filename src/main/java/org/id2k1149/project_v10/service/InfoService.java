@@ -68,10 +68,6 @@ public class InfoService {
                 .collect(Collectors.toList());
     }
 
-    public boolean checkTime() {
-        return (LocalTime.now().getHour() < 23) ;
-    }
-
     public List<AnswerTo> vote() {
         return AnswerUtil
                 .getAnswersTo(getAnswersInfoByDate(LocalDate.now()), getByDate(LocalDate.now()));
