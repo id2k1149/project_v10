@@ -41,8 +41,9 @@ public class CounterService {
         return counterRepo.getById(id);
     }
 
-    public void addCounter(Counter newCounter) {
+    public Counter addCounter(Counter newCounter) {
         counterRepo.save(newCounter);
+        return newCounter;
     }
 
     public void updateCounter(Long id, Counter counter) {

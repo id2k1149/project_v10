@@ -33,8 +33,9 @@ public class VoterService {
         return voterRepo.getById(id);
     }
 
-    public void addVoter(Voter newVoter) {
+    public Voter addVoter(Voter newVoter) {
         voterRepo.save(newVoter);
+        return newVoter;
     }
 
     public void updateVoter(Long id, Voter voter) {

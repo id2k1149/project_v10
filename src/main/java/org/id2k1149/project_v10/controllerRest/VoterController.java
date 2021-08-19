@@ -5,9 +5,12 @@ import org.id2k1149.project_v10.model.Voter;
 import org.id2k1149.project_v10.service.VoterService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -18,20 +21,30 @@ public class VoterController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public List<Voter> getVoters() {
-        return voterService.getVoters();
+    public ResponseEntity<List<Voter>> getVoters() {
+        return ResponseEntity.ok().body(voterService.getVoters());
     }
 
     @GetMapping(path = "{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public Voter getVoter(@PathVariable Long id) {
-        return voterService.getVoter(id);
+    public ResponseEntity<Voter> getVoter(@PathVariable Long id) {
+        URI uri = URI.create(ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/api/v1/voters/{id}")
+                .toUriString());
+        return ResponseEntity.created(uri).body(voterService.getVoter(id));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public void addVoter(@RequestBody Voter newVoter) {
-        voterService.addVoter(newVoter);
+    public ResponseEntity<Voter> addVoter(@RequestBody Voter newVoter) {
+        Voter created = voterService.addVoter(newVoter);
+        URI uriOfNewResource = URI.create(ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/api/v1/voters/{id}")
+                .toUriString());
+        return ResponseEntity.created(uriOfNewResource).body(created);
+
     }
 
     @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

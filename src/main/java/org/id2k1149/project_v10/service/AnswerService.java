@@ -34,10 +34,11 @@ public class AnswerService {
         return answerRepo.getById(id);
     }
 
-    public void addAnswer(Answer newAnswer) {
+    public Answer addAnswer(Answer newAnswer) {
         Optional<Answer> optionalAnswer = Optional.ofNullable(answerRepo.findAnswerByTitle(newAnswer.getTitle()));
         assert optionalAnswer.isEmpty() : "The name " + newAnswer.getTitle() + " is already used";
         answerRepo.save(newAnswer);
+        return newAnswer;
     }
 
     public void updateAnswer(Answer answer,
