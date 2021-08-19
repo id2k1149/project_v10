@@ -39,12 +39,13 @@ public class InfoService {
         return infoRepo.getById(id);
     }
 
-    public void addInfo(Info newInfo, Long answerId) {
+    public Info addInfo(Info newInfo, Long answerId) {
         assert answerRepo.findById(answerId).isPresent() : answerId + " does not exist";
         if (infoRepo.findByDateAndAnswer(LocalDate.now(), answerRepo.findById(answerId).get()).isEmpty()) {
             newInfo.setAnswer(answerRepo.getById(answerId));
         } else throw new InfoException("Can't add new Info, need to edit");
         infoRepo.save(newInfo);
+        return newInfo;
     }
 
     public void updateInfo(Info info, Long id) {

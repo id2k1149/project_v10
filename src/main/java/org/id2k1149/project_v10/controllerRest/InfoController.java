@@ -5,8 +5,12 @@ import org.id2k1149.project_v10.model.Info;
 import org.id2k1149.project_v10.service.InfoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,20 +22,30 @@ public class InfoController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public List<Info> getAllInfo() {
-        return infoService.getAllInfo();
+    public ResponseEntity<List<Info>> getAllInfo() {
+        return ResponseEntity.ok().body(infoService.getAllInfo());
     }
 
     @GetMapping(path = "{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public Info getInfo(@PathVariable Long id) {
-        return infoService.getInfo(id);
+    public ResponseEntity<Info> getInfo(@PathVariable Long id) {
+        URI uri = URI.create(ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/api/v1/info/{id}")
+                .toUriString());
+        return ResponseEntity.created(uri).body(infoService.getInfo(id));
     }
 
     @PostMapping(value = "{answerId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void addInfo(@RequestBody Info newInfo, @PathVariable Long answerId) {
-        infoService.addInfo(newInfo, answerId);
+    public ResponseEntity<Info> addInfo(@RequestBody Info newInfo, @PathVariable Long answerId) {
+        Info created = infoService.addInfo(newInfo, answerId);
+        URI uriOfNewResource = URI.create(ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/api/v1/info/{id}")
+                .toUriString());
+        return ResponseEntity.created(uriOfNewResource).body(created);
+
     }
 
     @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

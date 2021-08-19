@@ -10,9 +10,12 @@ import org.id2k1149.project_v10.to.AnswerTo;
 import org.id2k1149.project_v10.util.AnswerUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,20 +29,29 @@ public class AnswerController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public List<Answer> getAnswers() {
-        return answerService.getAnswers();
+    public ResponseEntity<List<Answer>> getAnswers() {
+        return ResponseEntity.ok().body(answerService.getAnswers());
     }
 
     @GetMapping(path = "{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public Answer getAnswer(@PathVariable Long id) {
-        return answerService.getAnswer(id);
+    public ResponseEntity<Answer> getAnswer(@PathVariable Long id) {
+        URI uri = URI.create(ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/api/v1/answers/{id}")
+                .toUriString());
+        return ResponseEntity.created(uri).body(answerService.getAnswer(id));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void addAnswer(@RequestBody Answer newAnswer) {
-        answerService.addAnswer(newAnswer);
+    public ResponseEntity<Answer> addAnswer(@RequestBody Answer newAnswer) {
+        Answer created = answerService.addAnswer(newAnswer);
+        URI uriOfNewResource = URI.create(ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/api/v1/answers/{id}")
+                .toUriString());
+        return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
