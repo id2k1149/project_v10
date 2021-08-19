@@ -17,11 +17,11 @@
             <h1> Where to have a lunch? </h1>
         </div>
 
-        <c:if test="${error1 != null}">
+        <c:if test="${info1 != null}">
 <%--            <h1>${role}</h1>--%>
             <p style="color:#337ab7"><strong>${pageContext.request.userPrincipal.name.toUpperCase()}, ${info1}</strong></p>
         </c:if>
-        <c:if test="${error2 != null}">
+        <c:if test="${info2 != null}">
             <p style="color:#337ab7"><strong>${info2}</strong></p>
         </c:if>
 

@@ -77,7 +77,8 @@ public class InfoService {
                 .getAnswersTo(getAnswersInfoByDate(LocalDate.now()), getByDate(LocalDate.now()));
     }
 
-    public void update(LocalDate date) {
+    public void everyDayUpdate(LocalDate date) {
+        // TODO vote check
         List<Info> optionalInfo = infoRepo.findAllByDate(date);
         if (optionalInfo.size() > 0) {
             return;

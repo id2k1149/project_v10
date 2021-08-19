@@ -24,7 +24,7 @@
             <div>
                 <c:if test="${pageContext.request.userPrincipal.name != null}">
                     <a href="${contextPath}/vote" class="btn btn-primary mr-2 mb-2">
-                        Vote
+                        Please vote
                     </a>
                 </c:if>
                 <c:if test="${pageContext.request.userPrincipal.name == null}">

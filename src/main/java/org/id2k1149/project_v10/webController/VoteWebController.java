@@ -67,8 +67,8 @@ public class VoteWebController {
 
     @GetMapping("/update")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String update() {
-        infoService.update(LocalDate.now());
+    public String everyDayUpdate() {
+        infoService.everyDayUpdate(LocalDate.now());
         return "redirect:/vote";
     }
 }
