@@ -33,7 +33,7 @@ public class UserWebController {
         userValidator.validate(userForm, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            log.error("registration errors");
+            log.error("registration has errors");
             return "auth/registration";
         }
 
