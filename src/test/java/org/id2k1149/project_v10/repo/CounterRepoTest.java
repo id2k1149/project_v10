@@ -18,7 +18,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 class CounterRepoTest {
-    private final Faker faker = new Faker();
 
     @Autowired
     private CounterRepo testCounterRepo;
@@ -28,7 +27,7 @@ class CounterRepoTest {
 
     public Answer getRandomAnswer() {
         Answer answer = new Answer();
-        answer.setTitle(faker.beer().name());
+        answer.setTitle(new Faker().beer().name());
         testAnswerRepo.save(answer);
         return answer;
     }
@@ -66,6 +65,20 @@ class CounterRepoTest {
         testCounterRepo.save(counter);
 
         Optional<Counter> counter2 = testCounterRepo.findByDateAndAnswer(date, answer);
+
+        assertThat(counter2.get()).isEqualTo(counter);
+    }
+
+    @Test
+    void getFirstByDate() {
+        Answer answer = getRandomAnswer();
+        LocalDate date = getRandomDate();
+        Counter counter = new Counter();
+        counter.setAnswer(answer);
+        counter.setDate(date);
+        testCounterRepo.save(counter);
+
+        Optional<Counter> counter2 = testCounterRepo.getFirstByDate(date);
 
         assertThat(counter2.get()).isEqualTo(counter);
     }

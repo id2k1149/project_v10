@@ -16,14 +16,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 class UserRepoTest {
-    private final Faker faker = new Faker();
 
     @Autowired
     private UserRepo testUserRepo;
 
     public User getRandomUser() {
         User user = new User();
-        user.setUsername(faker.name().username());
+        user.setUsername(new Faker().name().username());
         return user;
     }
 
