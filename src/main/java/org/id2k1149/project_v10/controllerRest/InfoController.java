@@ -1,4 +1,4 @@
-package org.id2k1149.project_v10.restController;
+package org.id2k1149.project_v10.controllerRest;
 
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.project_v10.model.Info;

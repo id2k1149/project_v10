@@ -28,7 +28,7 @@ curl -L 'http://localhost:8080/api/v1/votes/today' -u user:password
 curl -L 'http://localhost:8080/api/v1/votes/best' -u user:password
 
 #8 get all history of how User#1 voted
-curl -L 'http://localhost:8080/api/v1/user/1/votes' -u user:password
+curl -L 'http://localhost:8080/api/v1/users/1/votes' -u user:password
 
 #9 get all history of Answer#3/Restaurant#3 Info/Menu
 curl -L 'http://localhost:8080/api/v1/answers/3/info' -u user:password
