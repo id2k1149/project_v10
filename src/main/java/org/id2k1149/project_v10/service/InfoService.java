@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -74,32 +73,28 @@ public class InfoService {
     }
 
     public void everyDayUpdate(LocalDate date) {
-        // TODO vote check
-        List<Info> optionalInfo = infoRepo.findAllByDate(date);
-        if (optionalInfo.size() > 0) {
-            return;
-        } else {
-            List<Answer> allAnswers = answerRepo.findAll();
-            List<Answer> answers = new ArrayList<>();
-            IntStream.range(0, new Random().nextInt((allAnswers.size() - 2) + 1) + 2)
-                    .map(i -> new Random().nextInt(allAnswers.size())).forEach(randomIndex -> {
-                Answer randomAnswer = allAnswers.get(randomIndex);
-                allAnswers.remove(randomIndex);
-                answers.add(randomAnswer);
+        infoRepo.findAllByDate(date).forEach(infoRepo::delete);
+
+        List<Answer> allAnswers = answerRepo.findAll();
+        List<Answer> answers = new ArrayList<>();
+        IntStream.range(0, new Random().nextInt((allAnswers.size() - 2) + 1) + 2)
+                .map(i -> new Random().nextInt(allAnswers.size())).forEach(randomIndex -> {
+            Answer randomAnswer = allAnswers.get(randomIndex);
+            allAnswers.remove(randomIndex);
+            answers.add(randomAnswer);
+        });
+        answers.forEach(answer -> {
+            Info newInfo = new Info();
+            newInfo.setDate(date);
+            newInfo.setAnswer(answer);
+            Map<String, BigDecimal> descriptionMap = new HashMap<>();
+            IntStream.range(0, new Random().nextInt(4) + 2)
+                    .mapToObj(i -> new Faker().food().dish()).forEach(stringInfo -> {
+                BigDecimal digitalInfo = BigDecimal.valueOf(Double.parseDouble(new Faker().commerce().price(10, 100)));
+                descriptionMap.put(stringInfo, digitalInfo);
             });
-            answers.forEach(answer -> {
-                Info newInfo = new Info();
-                newInfo.setDate(date);
-                newInfo.setAnswer(answer);
-                Map<String, BigDecimal> descriptionMap = new HashMap<>();
-                IntStream.range(0, new Random().nextInt(4) + 2)
-                        .mapToObj(i -> new Faker().food().dish()).forEach(stringInfo -> {
-                    BigDecimal digitalInfo = BigDecimal.valueOf(Double.parseDouble(new Faker().commerce().price(10, 100)));
-                    descriptionMap.put(stringInfo, digitalInfo);
-                });
-                newInfo.setDetails(descriptionMap);
-                infoRepo.save(newInfo);
-            });
-        }
+            newInfo.setDetails(descriptionMap);
+            infoRepo.save(newInfo);
+        });
     }
 }

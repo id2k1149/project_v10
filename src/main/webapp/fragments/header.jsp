@@ -19,7 +19,16 @@
                     <li class="nav-item"><a class="nav-link" href="${contextPath}/result">Results</a></li>
                     <security:authorize access="hasAuthority('ROLE_ADMIN')">
                         <li class="nav-item">
-                            <a class="nav-link active" style="color:#337ab7" href="${contextPath}/update">UPDATE</a>
+                            <c:if test="${info3 == null}">
+                                <a class="nav-link active" style="color:#337ab7" href="${contextPath}/update">
+                                    <strong>CREATE a new poll</strong>
+                                </a>
+                            </c:if>
+                            <c:if test="${info3 != null}">
+                                <a class="nav-link active" style="color:darkred" href="#">
+                                    <strong>CREATE a new poll</strong>
+                                </a>
+                            </c:if>
                         </li>
                     </security:authorize>
                     <li class="nav-item">
