@@ -1,7 +1,6 @@
 package org.id2k1149.project_v10.repo;
 
 import com.github.javafaker.Faker;
-import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
