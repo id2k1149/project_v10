@@ -3,19 +3,24 @@ package org.id2k1149.project_v10.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.id2k1149.project_v10.exception.NotFoundException;
+import org.id2k1149.project_v10.exception.TimeException;
 import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.Info;
+import org.id2k1149.project_v10.model.Voter;
 import org.id2k1149.project_v10.repo.AnswerRepo;
 import org.id2k1149.project_v10.repo.InfoRepo;
 import org.id2k1149.project_v10.to.AnswerTo;
 import org.id2k1149.project_v10.to.InfoTo;
+import org.id2k1149.project_v10.util.AnswerUtil;
 import org.id2k1149.project_v10.util.InfoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

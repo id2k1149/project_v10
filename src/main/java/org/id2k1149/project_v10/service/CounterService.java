@@ -2,13 +2,20 @@ package org.id2k1149.project_v10.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.id2k1149.project_v10.exception.NotFoundException;
+import org.id2k1149.project_v10.exception.TimeException;
 import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.Counter;
+import org.id2k1149.project_v10.model.Info;
+import org.id2k1149.project_v10.repo.AnswerRepo;
 import org.id2k1149.project_v10.repo.CounterRepo;
+import org.id2k1149.project_v10.repo.InfoRepo;
+import org.id2k1149.project_v10.util.AnswerUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -21,6 +28,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CounterService {
     private final CounterRepo counterRepo;
+    private final AnswerRepo answerRepo;
+    private final InfoRepo infoRepo;
     private final VoterService voterService;
 
     public List<Counter> getCounters() {
@@ -84,4 +93,27 @@ public class CounterService {
     }
 
 
+    public void voteForAnswer(Long id) {
+        checkTime();
+        checkTodayAnswerList();
+        Counter counter = new Counter();
+        counter.setDate(LocalDate.now());
+        counter.setAnswer(answerRepo.getById(id));
+        vote(counter);
+    }
+
+    private void checkTime() {
+        if (LocalTime.now().getHour() > 22) throw new TimeException("You can't vote today. Vote tomorrow.");
+    }
+
+    private void checkTodayAnswerList() {
+        if (AnswerUtil.getAnswersTo(
+                infoRepo
+                        .findAllByDate(LocalDate.now())
+                        .stream()
+                        .map(Info::getAnswer)
+                        .collect(Collectors.toList()),
+                infoRepo
+                        .findAllByDate(LocalDate.now())).size() == 0) throw new NotFoundException("Empty vote list");
+    }
 }
