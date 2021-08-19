@@ -3,9 +3,12 @@ package org.id2k1149.project_v10.service;
 import com.github.javafaker.Faker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.id2k1149.project_v10.exception.CounterException;
+import org.id2k1149.project_v10.exception.InfoException;
 import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.Info;
 import org.id2k1149.project_v10.repo.AnswerRepo;
+import org.id2k1149.project_v10.repo.CounterRepo;
 import org.id2k1149.project_v10.repo.InfoRepo;
 import org.id2k1149.project_v10.to.AnswerTo;
 import org.id2k1149.project_v10.util.AnswerUtil;
@@ -25,6 +28,7 @@ import java.util.stream.IntStream;
 public class InfoService {
     private final InfoRepo infoRepo;
     private final AnswerRepo answerRepo;
+    private final CounterRepo counterRepo;
 
     public List<Info> getAllInfo() {
         return infoRepo.findAll();
@@ -37,17 +41,21 @@ public class InfoService {
 
     public void addInfo(Info newInfo, Long answerId) {
         assert answerRepo.findById(answerId).isPresent() : answerId + " does not exist";
-        newInfo.setAnswer(answerRepo.getById(answerId));
+        if (infoRepo.findByDateAndAnswer(LocalDate.now(), answerRepo.findById(answerId).get()).isEmpty()) {
+            newInfo.setAnswer(answerRepo.getById(answerId));
+        } else throw new InfoException("Can't add new Info, need to edit");
         infoRepo.save(newInfo);
     }
 
     public void updateInfo(Info info, Long id) {
         assert infoRepo.findById(id).isPresent() : id + " does not exist";
-        Info infoToUpdate = infoRepo.findById(id).get();
-        infoToUpdate.setAnswer(info.getAnswer());
-        infoToUpdate.setDate(info.getDate());
-        infoToUpdate.setDetails(info.getDetails());
-        infoRepo.save(infoToUpdate);
+        if (counterRepo.getFirstByDate(info.getDate()).isPresent()) {
+            Info infoToUpdate = infoRepo.findById(id).get();
+            infoToUpdate.setAnswer(info.getAnswer());
+            infoToUpdate.setDate(info.getDate());
+            infoToUpdate.setDetails(info.getDetails());
+            infoRepo.save(infoToUpdate);
+        } else throw new CounterException("Can't edit. There were votes at that day.");
     }
 
     public void deleteInfo(Long id) {
