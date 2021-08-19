@@ -37,8 +37,11 @@ public class VoteWebController {
                 if (optionalVoter.isPresent()) {
                     model.addAttribute("info1", "you voted today...");
                 }
+                if (!counterService.checkTodayCounter()) {
+                    model.addAttribute("info3", "Can't create a new poll because there were votes today");
+                }
             } else {
-                model.addAttribute("info2", "There are no polls today");
+                model.addAttribute("info2", "There are no polls today. Ask your Admin to Create a poll.");
                 log.info("There are no polls today");
             }
         } else {
@@ -69,7 +72,7 @@ public class VoteWebController {
     @GetMapping("/update")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String everyDayUpdate() {
-        infoService.everyDayUpdate(LocalDate.now());
+        if (counterService.checkTodayCounter()) infoService.everyDayUpdate(LocalDate.now());
         return "redirect:/vote";
     }
 }

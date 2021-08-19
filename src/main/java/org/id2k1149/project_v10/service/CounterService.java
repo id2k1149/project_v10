@@ -115,4 +115,8 @@ public class CounterService {
                 infoRepo
                         .findAllByDate(LocalDate.now())).size() == 0) throw new NotFoundException("Empty vote list");
     }
+
+    public boolean checkTodayCounter() {
+        return counterRepo.getFirstByDate(LocalDate.now()).isEmpty();
+    }
 }
