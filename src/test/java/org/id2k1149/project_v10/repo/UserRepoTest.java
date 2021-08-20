@@ -42,9 +42,7 @@ class UserRepoTest {
         User user = getRandomUser();
         String testName = user.getUsername();
         testUserRepo.save(user);
-
         User user2 = testUserRepo.findByUsername(testName);
-
         assertThat(user2).isEqualTo(user);
     }
 }
