@@ -2,6 +2,7 @@ package org.id2k1149.project_v10.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.id2k1149.project_v10.exception.NotFoundException;
 import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.Counter;
 import org.id2k1149.project_v10.model.User;
@@ -25,12 +26,16 @@ public class VoterService {
     private final UserService userService;
 
     public List<Voter> getVoters() {
+        log.info("Find all voters in DB");
         return voterRepo.findAll();
     }
 
     public Voter getVoter(Long id) {
-        assert voterRepo.findById(id).isPresent() : id + " does not exist";
-        return voterRepo.getById(id);
+        if (voterRepo.existsById(id)) return voterRepo.getById(id);
+        else {
+            log.error("Id {} does not exist in DB", id);
+            throw new NotFoundException("Id " + id + " does not exists");
+        }
     }
 
     public Voter addVoter(Voter newVoter) {
@@ -39,21 +44,29 @@ public class VoterService {
     }
 
     public void updateVoter(Long id, Voter voter) {
-        assert voterRepo.findById(id).isPresent() : id + " does not exist";
-        Voter voterToUpdate = voterRepo.findById(id).get();
-        voterToUpdate.setAnswer(voter.getAnswer());
-        voterToUpdate.setDate(voter.getDate());
-        voterToUpdate.setUser(voter.getUser());
-        voterRepo.save(voterToUpdate);
+        if (voterRepo.existsById(id)) {
+            Voter voterToUpdate = voterRepo.getById(id);
+            voterToUpdate.setAnswer(voter.getAnswer());
+            voterToUpdate.setDate(voter.getDate());
+            voterToUpdate.setUser(voter.getUser());
+            voterRepo.save(voterToUpdate);
+        } else {
+            log.error("Id {} does not exist in DB", id);
+            throw new NotFoundException("Id " + id + " does not exists");
+        }
     }
 
     public void deleteVoter(Long id) {
-        assert voterRepo.findById(id).isPresent() : id + " does not exists";
-        voterRepo.deleteById(id);
+        if (voterRepo.existsById(id)) voterRepo.deleteById(id);
+        else {
+            log.error("Id {} does not exist in DB", id);
+            throw new NotFoundException("Id " + id + " does not exists");
+        }
+
     }
 
     public void checkVoter(Answer newAnswer) {
-        User user = userService.findUser();
+        User user = userService.findCurrentUser();
         Voter voter = new Voter();
         voter.setUser(user);
         Optional<Voter> optionalVoter = checkUser();
@@ -72,7 +85,7 @@ public class VoterService {
     }
 
     public Optional<Voter> checkUser() {
-        User user = userService.findUser();
+        User user = userService.findCurrentUser();
         Voter voter = new Voter();
         voter.setUser(user);
         return voterRepo.findByUserAndDate(user, LocalDate.now());

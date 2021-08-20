@@ -46,7 +46,7 @@ public class UserService implements UserDetailsService {
                 user.getUsername(),
                 user.getPassword(),
                 authorities
-                );
+        );
     }
 
     public User findByUsername(String username) throws UsernameNotFoundException {
@@ -59,12 +59,10 @@ public class UserService implements UserDetailsService {
     }
 
     public User getUser(Long id) {
-        if (userRepo.findById(id).isPresent()) {
-            log.info("Find user {} in DB", userRepo.getById(id).getUsername());
-            return userRepo.getById(id);
-        } else {
+        if (userRepo.existsById(id)) return userRepo.getById(id);
+        else {
             log.error("User with id {} does not exist in DB", id);
-            throw new NotFoundException(id + " does not exist");
+            throw new NotFoundException("User with id " + id + " does not exists");
         }
     }
 
@@ -79,52 +77,50 @@ public class UserService implements UserDetailsService {
             user.setRole(Role.USER);
         }
         userRepo.save(user);
-        log.info("Add a new user {} to DB", user.getUsername());
+        log.info("Add a new user {} with id {} to DB", user.getUsername(), user.getId());
         return user;
     }
 
     @Transactional
     public void updateUser(User user,
                            Long id) {
-        User userToUpdate;
-        Optional<User> optionalUser = userRepo.findById(id);
-        if (optionalUser.isEmpty()) {
-            log.error("User with id {} does not exist in DB", id);
-            throw new NotFoundException(
-                    "user with id " + id + " does not exist");
+
+        if (userRepo.existsById(id)) {
+            User userToUpdate = userRepo.getById(id);
+
+            String newName = user.getUsername();
+            if (newName != null && newName.length() > 5) {
+                userToUpdate.setUsername(newName);
+            }
+
+            String newPassword = user.getPassword();
+            if (newPassword != null && newPassword.length() > 7) {
+                String encodedPassword = passwordEncoder.encode(newPassword);
+                userToUpdate.setPassword(encodedPassword);
+            }
+
+            Role newRole = user.getRole();
+            if (newRole != null) {
+                userToUpdate.setRole(newRole);
+            }
+
+            userRepo.save(userToUpdate);
+            log.info("User {} was updated", user.getUsername());
         } else {
-            userToUpdate = optionalUser.get();
+            log.error("User with id {} does not exist in DB", id);
+            throw new NotFoundException("User with id " + id + " does not exists");
         }
-
-        String newName = user.getUsername();
-        if (newName != null && newName.length() > 0 && !Objects.equals(userToUpdate.getUsername(), newName)) {
-            userToUpdate.setUsername(newName);
-        }
-
-        String newPassword = user.getPassword();
-        if (newPassword != null && newPassword.length() > 5) {
-            String encodedPassword = passwordEncoder.encode(newPassword);
-            userToUpdate.setPassword(encodedPassword);
-        }
-
-        Role newRole = user.getRole();
-        if (newRole != null) {
-            userToUpdate.setRole(newRole);
-        }
-
-        userRepo.save(userToUpdate);
-        log.info("User {} was updated", user.getUsername());
     }
 
     public void deleteUser(Long id) {
-        if(userRepo.findById(id).isEmpty()) {
-            throw new NotFoundException(id + " does not exists");
+        if (userRepo.existsById(id)) userRepo.deleteById(id);
+        else {
+            log.error("User with id {} does not exist in DB", id);
+            throw new NotFoundException("User with id " + id + " does not exists");
         }
-        log.info("User {} was deleted", userRepo.getById(id).getUsername());
-        userRepo.deleteById(id);
     }
 
-    public User findUser() {
+    public User findCurrentUser() {
         Object principal = SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -135,9 +131,13 @@ public class UserService implements UserDetailsService {
     }
 
     public UserVotesTo getUserAllVotes(Long id) {
-        User user = getUser(id);
-        List<Voter> voterList = voterRepo.findAllByUser(user);
-        List<VoterTo> voterToList = VoterUtil.getVoterTo(user, voterList);
-        return new UserVotesTo(id, user.getUsername(), voterToList);
+        if (userRepo.existsById(id)) {
+            List<Voter> voterList = voterRepo.findAllByUser(getUser(id));
+            List<VoterTo> voterToList = VoterUtil.getVoterTo(getUser(id), voterList);
+            return new UserVotesTo(id, getUser(id).getUsername(), voterToList);
+        } else {
+            log.error("User with id {} does not exist in DB", id);
+            throw new NotFoundException("User with id " + id + " does not exists");
+        }
     }
 }

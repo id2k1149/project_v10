@@ -70,20 +70,6 @@ class CounterRepoTest {
     }
 
     @Test
-    void getFirstByDate() {
-        Answer answer = getRandomAnswer();
-        LocalDate date = getRandomDate();
-        Counter counter = new Counter();
-        counter.setAnswer(answer);
-        counter.setDate(date);
-        testCounterRepo.save(counter);
-
-        Optional<Counter> counter2 = testCounterRepo.getFirstByDate(date);
-
-        assertThat(counter2.get()).isEqualTo(counter);
-    }
-
-    @Test
     void findAllByDate() {
         LocalDate date = getRandomDate();
         List<Counter> list = new ArrayList<>();

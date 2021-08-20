@@ -1,168 +1,141 @@
 package org.id2k1149.project_v10.service;
 
 import com.github.javafaker.Faker;
-import lombok.extern.slf4j.Slf4j;
-import org.id2k1149.project_v10.exception.BadRequestException;
-import org.id2k1149.project_v10.exception.NotFoundException;
 import org.id2k1149.project_v10.model.User;
 import org.id2k1149.project_v10.repo.UserRepo;
 import org.id2k1149.project_v10.repo.VoterRepo;
+import org.id2k1149.project_v10.to.UserVotesTo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.id2k1149.project_v10.model.Role.ADMIN;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.id2k1149.project_v10.model.Role.USER;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 @DataJpaTest
-@Slf4j
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
-
-    private final Faker faker = new Faker();
+    private UserService userService;
+    private AutoCloseable autoCloseable;
 
     @Mock
     private UserRepo userRepo;
-    @Autowired
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @Mock
     private VoterRepo voterRepo;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private UserService testUserService;
+
+    public static User getRandomUser() {
+        User user = new User();
+        user.setId((long) new Random().nextInt(10));
+        user.setUsername("testName_" + user.getId());
+        user.setPassword(new Faker().internet().password());
+        user.setRole(USER);
+        return user;
+    }
 
     @BeforeEach
     void setUp() {
-        bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        testUserService = new UserService(userRepo, bCryptPasswordEncoder, voterRepo);
-        int bound = new Random().nextInt(4) + 2;
-        IntStream.range(0, bound).mapToObj(i -> new User()).forEach(testUser -> {
-            testUser.setUsername(new Faker().name().username());
-            testUser.setPassword(new Faker().internet().password());
-            testUserService.addUser(testUser);
-        });
+        autoCloseable = MockitoAnnotations.openMocks(this);
+        passwordEncoder = new BCryptPasswordEncoder();
+        userService = new UserService(userRepo, passwordEncoder, voterRepo);
     }
 
-//    @AfterEach
-//    void tearDown() {
-//        userRepo.deleteAll();
-//    }
+    @AfterEach
+    void tearDown() throws Exception {
+        autoCloseable.close();
+    }
+
+    @Test
+    void findByUsername() {
+        String name = new Faker().name().username();
+        userService.findByUsername(name);
+        verify(userRepo).findByUsername(name);
+    }
 
     @Test
     void getUsers() {
-        //given
-        testUserService.getUsers();
-        //then
+        userService.getUsers();
         verify(userRepo).findAll();
     }
 
     @Test
     void getUser() {
-        //given
-        System.out.println(testUserService.getUsers().size());
-
-        //when
-//        User user = testUserService.getUser(testUser2.getId());
-
-        //then
-//        assertThat(testUserService.getUser(testUser2.getId())).isEqualTo(testUser1);
+        long id = getRandomUser().getId();
+        given(userRepo.existsById(id)).willReturn(true);
+        userService.getUser(id);
+        verify(userRepo).getById(id);
     }
 
     @Test
     void addUser() {
-        //given
-        User testUser1 = new User();
-        String testName1 = faker.name().username();
-        testUser1.setUsername(testName1);
-        String testPassword1 = faker.internet().password();
-        testUser1.setPassword(testPassword1);
-
-        //when
-        testUserService.addUser(testUser1);
-
-        //then
-        ArgumentCaptor<User> testUserArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userRepo).save(testUserArgumentCaptor.capture());
-        User captorUser = testUserArgumentCaptor.getValue();
-
-    }
-
-    @Test
-    void nameIsTaken() {
-        //given
-        User testUser1 = new User();
-        String testName1 = faker.name().username();
-        testUser1.setUsername(testName1);
-        String testPassword1 = faker.internet().password();
-        testUser1.setPassword(testPassword1);
-        testUser1.setId(1L);
-        testUserService.addUser(testUser1);
-
-
-        User newUser = new User();
-        newUser.setUsername(testName1);
-        String testPassword2 = faker.internet().password();
-        newUser.setPassword(testPassword2);
-        newUser.setId(2L);
-        testUserService.addUser(newUser);
-
-//        given(testRepository.usernameExists(anyString()))
-//                .willReturn(true);
-
-        //when
-        //then
-        assertThatThrownBy(() -> testUserService.addUser(newUser))
-                .isInstanceOf(BadRequestException.class);
-
-        verify(userRepo, never()).save(newUser);
-
+        User user1 = getRandomUser();
+        User user2 = userService.addUser(user1);
+        assertThat(user2).isEqualTo(user1);
     }
 
     @Test
     void updateUser() {
-
+        User user = getRandomUser();
+        long id = user.getId();
+        given(userRepo.existsById(id)).willReturn(true);
+        User userToUpdate = getRandomUser();
+        userToUpdate.setId(id);
+        doReturn(userToUpdate).when(userRepo).getById(id);
+        userService.updateUser(user, id);
+        assertThat(userToUpdate.getUsername()).isEqualTo(user.getUsername());
     }
 
     @Test
     void deleteUser() {
-        // given
-        long id = 10;
-        given(userRepo.existsById(id))
-                .willReturn(true);
-        // when
-        testUserService.deleteUser(id);
-
-        // then
+        long id = getRandomUser().getId();
+        given(userRepo.existsById(id)).willReturn(true);
+        userService.deleteUser(id);
         verify(userRepo).deleteById(id);
     }
 
     @Test
-    void cantDeleteIfUserNotFound() {
-        // given
-        long id = 10;
-        given(userRepo.existsById(id))
-                .willReturn(false);
-        // when
-        // then
-        assertThatThrownBy(() -> testUserService.deleteUser(id))
-                .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("User with id " + id + " does not exists");
-
-        verify(userRepo, never()).deleteById(any());
+    void loadUserByUsername() {
+        User user = getRandomUser();
+        String name = user.getUsername();
+        doReturn(user).when(userRepo).findByUsername(name);
+        UserDetails userDetails = userService.loadUserByUsername(name);
+        assertThat(userDetails.getUsername()).isEqualTo(name);
     }
 
+    @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    void findCurrentUser() {
+        User user1 = getRandomUser();
+        String name1 = user1.getUsername();
+        doReturn(user1).when(userRepo).findByUsername(name1);
+        assertThat(user1.getUsername()).isEqualTo(name1);
+    }
+
+    @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    void getUserAllVotes() {
+        User user = getRandomUser();
+        long id = user.getId();
+        given(userRepo.existsById(id)).willReturn(true);
+        List<UserVotesTo> userVotesToList = new ArrayList<>();
+        doReturn(userVotesToList).when(voterRepo).findAllByUser(user);
+    }
 }
