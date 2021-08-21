@@ -26,12 +26,16 @@ public class AnswerService {
     private final InfoRepo infoRepo;
 
     public List<Answer> getAnswers() {
+        log.info("Find all answers in DB");
         return answerRepo.findAll();
     }
 
     public Answer getAnswer(Long id) {
-        assert answerRepo.findById(id).isPresent() : id + " does not exist";
-        return answerRepo.getById(id);
+        if (answerRepo.existsById(id)) return answerRepo.getById(id);
+        else {
+            log.error("Id {} does not exist in DB", id);
+            throw new NotFoundException("Id " + id + " does not exists");
+        }
     }
 
     public Answer addAnswer(Answer newAnswer) {
@@ -43,18 +47,24 @@ public class AnswerService {
 
     public void updateAnswer(Answer answer,
                              Long id) {
-        Answer answerToUpdate;
-        Optional<Answer> optionalAnswer = answerRepo.findById(id);
-        if (optionalAnswer.isEmpty()) throw new NotFoundException(id + " does not exist");
-        else answerToUpdate = optionalAnswer.get();
-        if (answer.getTitle() != null) answerToUpdate.setTitle(answer.getTitle());
-
-        answerRepo.save(answerToUpdate);
+        if (answerRepo.existsById(id)) {
+            Answer answerToUpdate = answerRepo.getById(id);
+            if (answer.getTitle() != null) {
+                answerToUpdate.setTitle(answer.getTitle());
+                answerRepo.save(answerToUpdate);
+            } else {
+                log.error("Id {} does not exist in DB", id);
+                throw new NotFoundException("Id " + id + " does not exists");
+            }
+        }
     }
 
     public void deleteAnswer(Long id) {
-        assert answerRepo.findById(id).isPresent() : id + " does not exists";
-        answerRepo.deleteById(id);
+        if (answerRepo.existsById(id)) answerRepo.deleteById(id);
+        else {
+            log.error("Id {} does not exist in DB", id);
+            throw new NotFoundException("Id " + id + " does not exists");
+        }
     }
 
     public AnswerTo getAllInfoForAnswer(Long id) {

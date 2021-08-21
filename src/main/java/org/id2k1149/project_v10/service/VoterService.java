@@ -62,7 +62,6 @@ public class VoterService {
             log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
-
     }
 
     public void checkVoter(Answer newAnswer) {

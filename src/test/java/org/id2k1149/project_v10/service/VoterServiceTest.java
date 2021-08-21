@@ -1,6 +1,5 @@
 package org.id2k1149.project_v10.service;
 
-import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.User;
 import org.id2k1149.project_v10.model.Voter;
 import org.id2k1149.project_v10.repo.CounterRepo;
@@ -20,11 +19,11 @@ import java.time.LocalDate;
 import java.util.Random;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.id2k1149.project_v10.service.AnswerServiceTest.getRandomAnswer;
 import static org.id2k1149.project_v10.service.UserServiceTest.getRandomUser;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
-
 
 @DataJpaTest
 @ExtendWith(MockitoExtension.class)
@@ -44,7 +43,7 @@ class VoterServiceTest {
         voter.setId((long) new Random().nextInt(10));
         voter.setDate(LocalDate.now().minusDays(voter.getId()));
         voter.setUser(getRandomUser());
-        voter.setAnswer(new Answer());
+        voter.setAnswer(getRandomAnswer());
         return voter;
     }
 
