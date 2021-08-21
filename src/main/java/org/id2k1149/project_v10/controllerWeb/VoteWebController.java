@@ -29,7 +29,7 @@ public class VoteWebController {
 
     @GetMapping("/vote")
     public String survey(Model model) {
-        if (LocalTime.now().getHour() < 23) {
+        if (LocalTime.now().getHour() < 11) {
             List<AnswerTo> answersList = infoService.vote();
             if (answersList.size() > 0) {
                 model.addAttribute("answersList", answersList);

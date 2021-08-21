@@ -12,5 +12,3 @@ public class WebAppConfig {
         return new BCryptPasswordEncoder();
     }
 }
-
-

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.id2k1149.project_v10.model.User;
 import org.id2k1149.project_v10.service.SecurityService;
 import org.id2k1149.project_v10.service.UserService;
-import org.id2k1149.project_v10.validator.UserValidator;
+import org.id2k1149.project_v10.component.UserValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

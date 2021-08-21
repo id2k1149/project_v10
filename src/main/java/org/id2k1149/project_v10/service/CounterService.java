@@ -114,7 +114,7 @@ public class CounterService {
     }
 
     private void checkTime() {
-        if (LocalTime.now().getHour() > 22) throw new TimeException("You can't vote today. Vote tomorrow.");
+        if (LocalTime.now().getHour() > 11) throw new TimeException("You can't vote today. Vote tomorrow.");
     }
 
     private void checkTodayAnswerList() {

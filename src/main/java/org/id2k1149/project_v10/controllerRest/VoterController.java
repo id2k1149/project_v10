@@ -44,7 +44,6 @@ public class VoterController {
                 .path("/api/v1/voters/{id}")
                 .toUriString());
         return ResponseEntity.created(uriOfNewResource).body(created);
-
     }
 
     @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -52,8 +51,7 @@ public class VoterController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateVoter(
             @RequestBody Voter voter,
-            @PathVariable Long id
-    ) {
+            @PathVariable Long id) {
         voterService.updateVoter(id, voter);
     }
 
