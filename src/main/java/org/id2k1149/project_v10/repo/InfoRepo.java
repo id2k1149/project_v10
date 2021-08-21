@@ -14,5 +14,5 @@ import java.util.Optional;
 public interface InfoRepo extends JpaRepository<Info, Long> {
     List<Info> findAllByDate(LocalDate date);
     List<Info> findAllByAnswer(Answer answer);
-    Optional<Info> findByDateAndAnswer(LocalDate date, Answer answer);
+    Info findByDateAndAnswer(LocalDate date, Answer answer);
 }

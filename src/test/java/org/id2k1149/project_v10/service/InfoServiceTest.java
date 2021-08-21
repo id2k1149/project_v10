@@ -9,17 +9,22 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.id2k1149.project_v10.service.AnswerServiceTest.getRandomAnswer;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 @DataJpaTest
@@ -69,11 +74,13 @@ class InfoServiceTest {
     }
 
     @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
     void addInfo() {
         Info info1 = getRandomInfo();
+        System.out.println("info1 --> " + info1.toString());
         long id = info1.getAnswer().getId();
+        System.out.println(id);
         given(answerRepo.existsById(id)).willReturn(true);
-        given(infoRepo.findByDateAndAnswer(LocalDate.now(), null)).willReturn(null);
         Info info2 = infoService.addInfo(info1, id);
         assertThat(info2).isEqualTo(info1);
     }

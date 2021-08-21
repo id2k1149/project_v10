@@ -99,7 +99,7 @@ class InfoRepoTest {
         info.setAnswer(answer);
         testInfoRepo.save(info);
 
-        Info info2 = testInfoRepo.findByDateAndAnswer(date, answer).get();
+        Info info2 = testInfoRepo.findByDateAndAnswer(date, answer);
         assertThat(info2).isEqualTo(info);
     }
 }
