@@ -33,12 +33,16 @@ public class CounterService {
     private final VoterService voterService;
 
     public List<Counter> getCounters() {
+        log.info("Find all counters in DB");
         return counterRepo.findAll();
     }
 
     public Counter getCounter(Long id) {
-        assert counterRepo.findById(id).isPresent() : id + " does not exist";
-        return counterRepo.getById(id);
+        if (counterRepo.existsById(id)) return counterRepo.getById(id);
+        else {
+            log.error("Id {} does not exist in DB", id);
+            throw new NotFoundException("Id " + id + " does not exists");
+        }
     }
 
     public Counter addCounter(Counter newCounter) {
@@ -47,17 +51,24 @@ public class CounterService {
     }
 
     public void updateCounter(Long id, Counter counter) {
-        assert counterRepo.findById(id).isPresent() : id + " does not exist";
-        Counter counterToUpdate = counterRepo.findById(id).get();
-        counterToUpdate.setAnswer(counter.getAnswer());
-        counterToUpdate.setDate(counter.getDate());
-        counterToUpdate.setVotes(counter.getVotes());
-        counterRepo.save(counterToUpdate);
+        if (counterRepo.existsById(id)) {
+            Counter counterToUpdate = counterRepo.getById(id);
+            counterToUpdate.setAnswer(counter.getAnswer());
+            counterToUpdate.setDate(counter.getDate());
+            counterToUpdate.setVotes(counter.getVotes());
+            counterRepo.save(counterToUpdate);
+        } else {
+            log.error("Id {} does not exist in DB", id);
+            throw new NotFoundException("Id " + id + " does not exists");
+        }
     }
 
     public void deleteCounter(Long id) {
-        assert counterRepo.findById(id).isPresent() : id + " does not exists";
-        counterRepo.deleteById(id);
+        if (counterRepo.existsById(id)) counterRepo.deleteById(id);
+        else {
+            log.error("Id {} does not exist in DB", id);
+            throw new NotFoundException("Id " + id + " does not exists");
+        }
     }
 
     public void vote(Counter counter) {

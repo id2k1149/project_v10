@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.id2k1149.project_v10.exception.CounterException;
 import org.id2k1149.project_v10.exception.InfoException;
+import org.id2k1149.project_v10.exception.NotFoundException;
 import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.Info;
 import org.id2k1149.project_v10.repo.AnswerRepo;
@@ -31,21 +32,30 @@ public class InfoService {
     private final CounterRepo counterRepo;
 
     public List<Info> getAllInfo() {
+        log.info("Find all info in DB");
         return infoRepo.findAll();
     }
 
     public Info getInfo(Long id) {
-        assert infoRepo.findById(id).isPresent() : id + " does not exist";
-        return infoRepo.getById(id);
+        if (infoRepo.existsById(id)) return infoRepo.getById(id);
+        else {
+            log.error("Id {} does not exist in DB", id);
+            throw new NotFoundException("Id " + id + " does not exists");
+        }
     }
 
     public Info addInfo(Info newInfo, Long answerId) {
-        assert answerRepo.findById(answerId).isPresent() : answerId + " does not exist";
-        if (infoRepo.findByDateAndAnswer(LocalDate.now(), answerRepo.findById(answerId).get()).isEmpty()) {
-            newInfo.setAnswer(answerRepo.getById(answerId));
-        } else throw new InfoException("Can't add new Info, need to edit");
-        infoRepo.save(newInfo);
-        return newInfo;
+        if (answerRepo.existsById(answerId)) {
+            if (infoRepo.findByDateAndAnswer(LocalDate.now(), answerRepo.getById(answerId)).isEmpty()) {
+                newInfo.setAnswer(answerRepo.getById(answerId));
+            } else throw new InfoException("Can't add new Info, need to edit");
+            infoRepo.save(newInfo);
+            return newInfo;
+
+        } else {
+            log.error("Id {} does not exist in DB", answerId);
+            throw new NotFoundException("Id " + answerId + " does not exists");
+        }
     }
 
     public void updateInfo(Info info, Long id) {
