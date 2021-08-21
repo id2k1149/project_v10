@@ -35,7 +35,3 @@ curl -L 'http://localhost:8080/api/v1/users/1/votes' -u user:password
 
 #9 get all history of Answer#3/Restaurant#3 Info/Menu
 curl -L 'http://localhost:8080/api/v1/answers/3/info' -u user:password
-
-
-
-
