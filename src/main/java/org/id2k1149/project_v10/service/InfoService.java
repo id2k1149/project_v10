@@ -46,7 +46,7 @@ public class InfoService {
 
     public Info addInfo(Info newInfo, Long answerId) {
         if (answerRepo.existsById(answerId)) {
-            if (infoRepo.findByDateAndAnswer(LocalDate.now(), answerRepo.getById(answerId)).isEmpty()) {
+            if (infoRepo.findByDateAndAnswer(LocalDate.now(), answerRepo.getById(answerId)) == null) {
                 newInfo.setAnswer(answerRepo.getById(answerId));
             } else throw new InfoException("Can't add new Info, need to edit");
             infoRepo.save(newInfo);
