@@ -1,6 +1,5 @@
 package org.id2k1149.project_v10.service;
 
-import org.id2k1149.project_v10.model.Answer;
 import org.id2k1149.project_v10.model.Info;
 import org.id2k1149.project_v10.repo.AnswerRepo;
 import org.id2k1149.project_v10.repo.CounterRepo;
@@ -12,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
@@ -69,11 +70,11 @@ class InfoServiceTest {
     }
 
     @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
     void addInfo() {
         Info info1 = getRandomInfo();
         long id = info1.getAnswer().getId();
         given(answerRepo.existsById(id)).willReturn(true);
-        given(infoRepo.findByDateAndAnswer(LocalDate.now(), null)).willReturn(null);
         Info info2 = infoService.addInfo(info1, id);
         assertThat(info2).isEqualTo(info1);
     }
