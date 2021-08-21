@@ -21,6 +21,7 @@ import java.util.Random;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.id2k1149.project_v10.service.AnswerServiceTest.getRandomAnswer;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 @DataJpaTest
@@ -81,25 +82,37 @@ class InfoServiceTest {
 
     @Test
     void updateInfo() {
+        Info info = getRandomInfo();
+        System.out.println("info ->" + info);
+        long id = info.getId();
+        given(infoRepo.existsById(id)).willReturn(true);
+        Info infoToUpdate = getRandomInfo();
+        infoToUpdate.setId(id);
+        doReturn(infoToUpdate).when(infoRepo).getById(id);
+        infoService.updateInfo(info, id);
+        assertThat(infoToUpdate.getDate()).isEqualTo(info.getDate());
     }
 
     @Test
     void deleteInfo() {
+        long id = getRandomInfo().getId();
+        given(infoRepo.existsById(id)).willReturn(true);
+        infoService.deleteInfo(id);
+        verify(infoRepo).deleteById(id);
     }
 
     @Test
     void getByDate() {
+        LocalDate localDate = LocalDate.now();
+        infoService.getByDate(localDate);
+        verify(infoRepo).findAllByDate(localDate);
     }
 
     @Test
     void getAnswersInfoByDate() {
-    }
+        LocalDate localDate = LocalDate.now();
+        infoService.getAnswersInfoByDate(localDate);
+        verify(infoRepo).findAllByDate(localDate);
 
-    @Test
-    void vote() {
-    }
-
-    @Test
-    void everyDayUpdate() {
     }
 }
