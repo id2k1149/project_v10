@@ -59,19 +59,26 @@ public class InfoService {
     }
 
     public void updateInfo(Info info, Long id) {
-        assert infoRepo.findById(id).isPresent() : id + " does not exist";
-        if (counterRepo.getFirstByDate(info.getDate()).isPresent()) {
-            Info infoToUpdate = infoRepo.findById(id).get();
-            infoToUpdate.setAnswer(info.getAnswer());
-            infoToUpdate.setDate(info.getDate());
-            infoToUpdate.setDetails(info.getDetails());
-            infoRepo.save(infoToUpdate);
-        } else throw new CounterException("Can't edit. There were votes at that day.");
+        if (infoRepo.existsById(id)) {
+            if (counterRepo.getFirstByDate(info.getDate()).isEmpty()) {
+                Info infoToUpdate = infoRepo.getById(id);
+                infoToUpdate.setAnswer(info.getAnswer());
+                infoToUpdate.setDate(info.getDate());
+                infoToUpdate.setDetails(info.getDetails());
+                infoRepo.save(infoToUpdate);
+            } else throw new CounterException("Can't edit. There were votes at that day.");
+        } else {
+            log.error("Id {} does not exist in DB", id);
+            throw new NotFoundException("Id " + id + " does not exists");
+        }
     }
 
     public void deleteInfo(Long id) {
-        assert infoRepo.findById(id).isPresent() : id + " does not exists";
-        infoRepo.deleteById(id);
+        if (infoRepo.existsById(id)) infoRepo.deleteById(id);
+        else {
+            log.error("Id {} does not exist in DB", id);
+            throw new NotFoundException("Id " + id + " does not exists");
+        }
     }
 
     public List<Info> getByDate(LocalDate date) {
