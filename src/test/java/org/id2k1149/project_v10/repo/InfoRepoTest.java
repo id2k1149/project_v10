@@ -31,7 +31,7 @@ class InfoRepoTest {
         IntStream.range(0, new Random().nextInt(4) + 2)
                 .mapToObj(i -> new Info()).forEach(info -> {
             info.setAnswer(getRandomAnswer());
-//            info.setDate(getRandomDate());
+            info.setDate(getRandomDate());
             testInfoRepo.save(info);
         });
     }
@@ -43,8 +43,8 @@ class InfoRepoTest {
     }
 
     public LocalDate getRandomDate() {
-        long minDay = LocalDate.of(2021, 8, 1).toEpochDay();
-        long maxDay = LocalDate.of(2021, 8, 31).toEpochDay();
+        long minDay = LocalDate.of(2021, 7, 1).toEpochDay();
+        long maxDay = LocalDate.of(2021, 7, 31).toEpochDay();
         long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
         return LocalDate.ofEpochDay(randomDay);
     }
@@ -58,7 +58,7 @@ class InfoRepoTest {
 
     @Test
     void findAllDate() {
-        LocalDate date = getRandomDate();
+        LocalDate date = LocalDate.now();
         List<Info> list = new ArrayList<>();
 
         IntStream.range(0, new Random().nextInt(4) + 2)
@@ -68,7 +68,6 @@ class InfoRepoTest {
             list.add(info);
             testInfoRepo.save(info);
         });
-
         List<Info> list2 = testInfoRepo.findAllByDate(date);
         assertThat(list2).isEqualTo(list);
     }
