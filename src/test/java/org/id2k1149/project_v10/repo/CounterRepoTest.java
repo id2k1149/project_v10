@@ -33,8 +33,8 @@ class CounterRepoTest {
     }
 
     public LocalDate getRandomDate() {
-        long minDay = LocalDate.of(2021, 8, 1).toEpochDay();
-        long maxDay = LocalDate.of(2021, 8, 31).toEpochDay();
+        long minDay = LocalDate.of(2021, 7, 1).toEpochDay();
+        long maxDay = LocalDate.of(2021, 7, 31).toEpochDay();
         long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
         return LocalDate.ofEpochDay(randomDay);
     }
@@ -58,7 +58,7 @@ class CounterRepoTest {
     @Test
     void findByDateAndAnswer() {
         Answer answer = getRandomAnswer();
-        LocalDate date = getRandomDate();
+        LocalDate date = LocalDate.now();
         Counter counter = new Counter();
         counter.setAnswer(answer);
         counter.setDate(date);
@@ -71,7 +71,7 @@ class CounterRepoTest {
 
     @Test
     void findAllByDate() {
-        LocalDate date = getRandomDate();
+        LocalDate date = LocalDate.now();
         List<Counter> list = new ArrayList<>();
         IntStream.range(0, new Random().nextInt(4) + 2)
                 .mapToObj(i -> new Counter()).forEach(counter -> {
