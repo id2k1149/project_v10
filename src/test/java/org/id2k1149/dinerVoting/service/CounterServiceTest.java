@@ -1,6 +1,6 @@
 package org.id2k1149.dinerVoting.service;
 
-import org.id2k1149.dinerVoting.model.VoiceCounter;
+import org.id2k1149.dinerVoting.model.Counter;
 import org.id2k1149.dinerVoting.repo.DinerRepo;
 import org.id2k1149.dinerVoting.repo.CounterRepo;
 import org.id2k1149.dinerVoting.repo.MenuRepo;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 
 @DataJpaTest
 @ExtendWith(MockitoExtension.class)
-class VoiceCounterServiceTest {
+class CounterServiceTest {
     private CounterService counterService;
     private AutoCloseable autoCloseable;
 
@@ -39,13 +39,13 @@ class VoiceCounterServiceTest {
     @Mock
     private VoterService voterService;
 
-    public static VoiceCounter getRandomCounter() {
-        VoiceCounter voiceCounter = new VoiceCounter();
-        voiceCounter.setId((long) new Random().nextInt(10));
-        voiceCounter.setDate(LocalDate.now().minusDays(voiceCounter.getId()));
-        voiceCounter.setDiner(getRandomDiner());
-        voiceCounter.setVotes(new Random().nextInt(3));
-        return voiceCounter;
+    public static Counter getRandomCounter() {
+        Counter counter = new Counter();
+        counter.setId((long) new Random().nextInt(10));
+        counter.setDate(LocalDate.now().minusDays(counter.getId()));
+        counter.setDiner(getRandomDiner());
+        counter.setVotes(new Random().nextInt(3));
+        return counter;
     }
 
     @BeforeEach
@@ -75,21 +75,21 @@ class VoiceCounterServiceTest {
 
     @Test
     void addCounter() {
-        VoiceCounter voiceCounter1 = getRandomCounter();
-        VoiceCounter voiceCounter2 = counterService.addCounter(voiceCounter1);
-        assertThat(voiceCounter2).isEqualTo(voiceCounter1);
+        Counter counter1 = getRandomCounter();
+        Counter counter2 = counterService.addCounter(counter1);
+        assertThat(counter2).isEqualTo(counter1);
     }
 
     @Test
     void updateCounter() {
-        VoiceCounter voiceCounter = getRandomCounter();
-        long id = voiceCounter.getId();
+        Counter counter = getRandomCounter();
+        long id = counter.getId();
         given(counterRepo.existsById(id)).willReturn(true);
-        VoiceCounter voiceCounterToUpdate = getRandomCounter();
-        voiceCounterToUpdate.setId(id);
-        doReturn(voiceCounterToUpdate).when(counterRepo).getById(id);
-        counterService.updateCounter(id, voiceCounter);
-        assertThat(voiceCounterToUpdate.getDate()).isEqualTo(voiceCounter.getDate());
+        Counter counterToUpdate = getRandomCounter();
+        counterToUpdate.setId(id);
+        doReturn(counterToUpdate).when(counterRepo).getById(id);
+        counterService.updateCounter(id, counter);
+        assertThat(counterToUpdate.getDate()).isEqualTo(counter.getDate());
     }
 
     @Test

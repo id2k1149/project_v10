@@ -13,7 +13,7 @@ import static javax.persistence.GenerationType.AUTO;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class VoiceCounter {
+public class Counter {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;

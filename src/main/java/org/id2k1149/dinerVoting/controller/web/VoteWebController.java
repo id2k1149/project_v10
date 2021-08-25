@@ -2,7 +2,7 @@ package org.id2k1149.dinerVoting.controller.web;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.id2k1149.dinerVoting.model.VoiceCounter;
+import org.id2k1149.dinerVoting.model.Counter;
 import org.id2k1149.dinerVoting.model.Voter;
 import org.id2k1149.dinerVoting.service.CounterService;
 import org.id2k1149.dinerVoting.service.MenuService;
@@ -52,18 +52,18 @@ public class VoteWebController {
     }
 
     @PostMapping("/vote")
-    public String vote(VoiceCounter voiceCounter) {
-        if (voiceCounter.getDiner() == null) {
+    public String vote(Counter counter) {
+        if (counter.getDiner() == null) {
             log.error("wrong answer");
             return "redirect:/vote";
         }
-        counterService.vote(voiceCounter);
+        counterService.vote(counter);
         return "redirect:/result";
     }
 
     @GetMapping("/result")
     public String result(Model model) {
-        List<VoiceCounter> sortedList = counterService.getAllResults();
+        List<Counter> sortedList = counterService.getAllResults();
         if (sortedList.size() > 0) model.addAttribute("sortedList", sortedList);
         else model.addAttribute("error", "There are no results");
         return "result";

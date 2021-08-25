@@ -1,7 +1,7 @@
 package org.id2k1149.dinerVoting.controller.rest;
 
 import lombok.RequiredArgsConstructor;
-import org.id2k1149.dinerVoting.model.VoiceCounter;
+import org.id2k1149.dinerVoting.model.Counter;
 import org.id2k1149.dinerVoting.service.CounterService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,34 +14,29 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/votes")
+@RequestMapping(path = CounterController.REST_URL)
+@PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
 @RequiredArgsConstructor
 public class CounterController {
     private final CounterService counterService;
+    static final String REST_URL = "/api/v1/counters";
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<List<VoiceCounter>> getCounters() {
-        return ResponseEntity.ok().body(counterService.getCounters());
+    public List<Counter> getCounters() {
+        return counterService.getCounters();
     }
 
     @GetMapping(path = "{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<VoiceCounter> getCounter(@PathVariable Long id) {
-        URI uri = URI.create(ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/api/v1/votes/{id}")
-                .toUriString());
-        return ResponseEntity.created(uri).body(counterService.getCounter(id));
+    public Counter getCounter(@PathVariable Long id) {
+        return counterService.getCounter(id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<VoiceCounter> addCounter(@RequestBody VoiceCounter newVoiceCounter) {
-        VoiceCounter created = counterService.addCounter(newVoiceCounter);
+    public ResponseEntity<Counter> addCounter(@RequestBody Counter newCounter) {
+        Counter created = counterService.addCounter(newCounter);
         URI uriOfNewResource = URI.create(ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/api/v1/votes/{id}")
+                .path(REST_URL + "/{id}")
                 .toUriString());
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
@@ -50,10 +45,10 @@ public class CounterController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateCounter(
-            @RequestBody VoiceCounter voiceCounter,
+            @RequestBody Counter counter,
             @PathVariable Long id
     ) {
-        counterService.updateCounter(id, voiceCounter);
+        counterService.updateCounter(id, counter);
     }
 
     @DeleteMapping(path = "{id}")
@@ -64,14 +59,12 @@ public class CounterController {
     }
 
     @GetMapping(path = "today")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public List<VoiceCounter> getTodayResults() {
+    public List<Counter> getTodayResults() {
         return counterService.getAllResults();
     }
 
     @GetMapping(path = "best")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public VoiceCounter getBestResult() {
+    public Counter getBestResult() {
         return counterService.getBestResult();
     }
 }
