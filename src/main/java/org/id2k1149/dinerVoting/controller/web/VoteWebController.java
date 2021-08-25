@@ -1,0 +1,78 @@
+package org.id2k1149.dinerVoting.controller.web;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.id2k1149.dinerVoting.model.VoiceCounter;
+import org.id2k1149.dinerVoting.model.Voter;
+import org.id2k1149.dinerVoting.service.CounterService;
+import org.id2k1149.dinerVoting.service.MenuService;
+import org.id2k1149.dinerVoting.service.VoterService;
+import org.id2k1149.dinerVoting.to.DinerTo;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
+
+@Controller
+@RequiredArgsConstructor
+@Slf4j
+public class VoteWebController {
+    private final MenuService menuService;
+    private final CounterService counterService;
+    private final VoterService voterService;
+
+    @GetMapping("/vote")
+    public String survey(Model model) {
+        if (LocalTime.now().getHour() < 23) {
+            List<DinerTo> dinersList = menuService.vote();
+            if (dinersList.size() > 0) {
+                model.addAttribute("dinersList", dinersList);
+                Optional<Voter> optionalVoter = voterService.checkUser();
+                if (optionalVoter.isPresent()) {
+                    model.addAttribute("info1", "you voted today...");
+                }
+                if (!counterService.checkTodayCounter()) {
+                    model.addAttribute("info3", "Can't create a new poll because there were votes today");
+                }
+            } else {
+                model.addAttribute("info2", "There are no polls today. Ask your Admin to Create a poll.");
+                log.info("There are no polls today");
+            }
+        } else {
+            model.addAttribute("info2", "It is too late to vote.");
+            log.info("It is too late to vote.");
+        }
+        return "vote";
+    }
+
+    @PostMapping("/vote")
+    public String vote(VoiceCounter voiceCounter) {
+        if (voiceCounter.getDiner() == null) {
+            log.error("wrong answer");
+            return "redirect:/vote";
+        }
+        counterService.vote(voiceCounter);
+        return "redirect:/result";
+    }
+
+    @GetMapping("/result")
+    public String result(Model model) {
+        List<VoiceCounter> sortedList = counterService.getAllResults();
+        if (sortedList.size() > 0) model.addAttribute("sortedList", sortedList);
+        else model.addAttribute("error", "There are no results");
+        return "result";
+    }
+
+    @GetMapping("/update")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public String everyDayUpdate() {
+        if (counterService.checkTodayCounter()) menuService.everyDayUpdate(LocalDate.now());
+        return "redirect:/vote";
+    }
+}
