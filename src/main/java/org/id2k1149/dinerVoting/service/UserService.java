@@ -91,23 +91,9 @@ public class UserService implements UserDetailsService {
 
         if (userRepo.findById(id).isPresent()) {
             User userToUpdate = userRepo.getById(id);
-
-            String newName = user.getUsername();
-            if (newName != null && newName.length() > 5) {
-                userToUpdate.setUsername(newName);
-            }
-
-            String newPassword = user.getPassword();
-            if (newPassword != null && newPassword.length() > 7) {
-                String encodedPassword = passwordEncoder.encode(newPassword);
-                userToUpdate.setPassword(encodedPassword);
-            }
-
-            Role newRole = user.getRole();
-            if (newRole != null) {
-                userToUpdate.setRole(newRole);
-            }
-
+            userToUpdate.setUsername(user.getUsername());
+            userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
+            userToUpdate.setRole(user.getRole() == null ? userToUpdate.getRole() : user.getRole());
             userRepo.save(userToUpdate);
             log.info("User {} was updated", user.getUsername());
         } else {

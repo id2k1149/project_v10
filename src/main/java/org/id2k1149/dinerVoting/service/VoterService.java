@@ -70,7 +70,7 @@ public class VoterService {
         User user = userService.findCurrentUser();
         Voter voter = new Voter();
         voter.setUser(user);
-        Optional<Voter> optionalVoter = checkUser();
+        Optional<Voter> optionalVoter = voterRepo.findByUserAndDate(user, LocalDate.now());
         if (optionalVoter.isPresent()) {
             voter = optionalVoter.get();
             Diner voterDiner = voter.getDiner();
@@ -85,10 +85,7 @@ public class VoterService {
         voterRepo.save(voter);
     }
 
-    public Optional<Voter> checkUser() {
-        User user = userService.findCurrentUser();
-        Voter voter = new Voter();
-        voter.setUser(user);
-        return voterRepo.findByUserAndDate(user, LocalDate.now());
+    public Optional<Voter> getVoterByUserAndDate() {
+        return voterRepo.findByUserAndDate(userService.findCurrentUser(), LocalDate.now());
     }
 }

@@ -108,7 +108,7 @@ class VoterServiceTest {
     void checkUser() {
         User user = getRandomUser();
         doReturn(user).when(userService).findCurrentUser();
-        voterService.checkUser();
+        voterService.getVoterByUserAndDate();
         verify(voterRepo).findByUserAndDate(user, LocalDate.now());
     }
 }
