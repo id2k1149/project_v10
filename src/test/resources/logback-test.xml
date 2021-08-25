@@ -21,7 +21,7 @@
         <appender-ref ref="result"/>
     </logger>
 
-    <logger name="org.id2k1149.project_v10" level="debug"/>
+    <logger name="org.id2k1149.dinerVoting" level="debug"/>
 
     <root level="INFO">
         <appender-ref ref="console"/>

@@ -34,7 +34,7 @@
                     <tbody>
                     <c:forEach items="${sortedList}" var="result">
                         <tr>
-                            <td>${result.answer}</td>
+                            <td>${result.diner}</td>
                             <td class="text-center">${result.votes}</td>
                         </tr>
                     </c:forEach>

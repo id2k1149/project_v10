@@ -32,14 +32,14 @@
         </security:authorize>
         <form action="vote" method="post">
 
-            <c:forEach items="${answersList}" var="answer">
+            <c:forEach items="${dinersList}" var="diner">
 
                 <input type="radio"
-                       id="answer"
-                       name="answer"
-                       value="${answer.id}"
+                       id="diner"
+                       name="diner"
+                       value="${diner.id}"
                 />
-                <label for="answer">${answer.title}</label>
+                <label for="diner">${diner.title}</label>
                 <table class="table table-bordered" bgcolor="#708090">
                     <thead>
                     <tr>
@@ -47,7 +47,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${answer.infoTo.get(0).details}" var="entry">
+                    <c:forEach items="${diner.menu.get(0).dishes}" var="entry">
                         <tr>
                             <td class="text-left">${entry.key} : ${entry.value}</td>
                         </tr>
