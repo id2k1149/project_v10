@@ -29,24 +29,24 @@ public class VoteWebController {
 
     @GetMapping("/vote")
     public String survey(Model model) {
-        if (LocalTime.now().getHour() < 23) {
-            List<DinerTo> dinersList = menuService.vote();
-            if (dinersList.size() > 0) {
-                model.addAttribute("dinersList", dinersList);
-                Optional<Voter> optionalVoter = voterService.checkUser();
-                if (optionalVoter.isPresent()) {
-                    model.addAttribute("info1", "you voted today...");
-                }
-                if (!counterService.checkTodayCounter()) {
-                    model.addAttribute("info3", "Can't create a new poll because there were votes today");
-                }
-            } else {
-                model.addAttribute("info2", "There are no polls today. Ask your Admin to Create a poll.");
-                log.info("There are no polls today");
+        List<DinerTo> dinersList = menuService.getTodayDinersList();
+        if (dinersList.size() > 0) {
+            if (!counterService.checkTodayCounter()) {
+                model.addAttribute("info3", "Can't create a new poll because there were votes today");
             }
+            Optional<Voter> optionalVoter = voterService.getVoterByUserAndDate();
+            if (optionalVoter.isPresent()) {
+                model.addAttribute("info1", "you voted today...");
+                if (LocalTime.now().getHour() > 11) {
+                    model.addAttribute("info2", "It is too late to vote.");
+                    log.info("It is too late to vote.");
+                    return "vote";
+                }
+            }
+            model.addAttribute("dinersList", dinersList);
         } else {
-            model.addAttribute("info2", "It is too late to vote.");
-            log.info("It is too late to vote.");
+            model.addAttribute("info2", "There are no polls today. Ask your Admin to Create a poll.");
+            log.info("There are no polls today");
         }
         return "vote";
     }

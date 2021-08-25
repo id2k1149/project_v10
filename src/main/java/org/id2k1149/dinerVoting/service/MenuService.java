@@ -95,7 +95,7 @@ public class MenuService {
                 .collect(Collectors.toList());
     }
 
-    public List<DinerTo> vote() {
+    public List<DinerTo> getTodayDinersList() {
         return DinerUtil
                 .getDinersTo(getDinersMenuByDate(LocalDate.now()), getByDate(LocalDate.now()));
     }
