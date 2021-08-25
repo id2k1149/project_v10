@@ -15,25 +15,21 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/menus")
+@RequestMapping(path = MenuController.REST_URL)
+@PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
 @RequiredArgsConstructor
 public class MenuController {
     private final MenuService menuService;
+    static final String REST_URL = "/api/v1/menus";
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<List<Menu>> getAllMenu() {
-        return ResponseEntity.ok().body(menuService.getAllMenu());
+    public List<Menu> getAllMenu() {
+        return menuService.getAllMenu();
     }
 
     @GetMapping(path = "{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<Menu> getMenu(@PathVariable Long id) {
-        URI uri = URI.create(ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/api/v1/menus/{id}")
-                .toUriString());
-        return ResponseEntity.created(uri).body(menuService.getMenu(id));
+    public Menu getMenu(@PathVariable Long id) {
+        return menuService.getMenu(id);
     }
 
     @PostMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -42,7 +38,7 @@ public class MenuController {
         Menu created = menuService.addMenu(newMenu, id);
         URI uriOfNewResource = URI.create(ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/api/v1/menus/{id}")
+                .path(REST_URL + "/{id}")
                 .toUriString());
         return ResponseEntity.created(uriOfNewResource).body(created);
 
@@ -66,7 +62,6 @@ public class MenuController {
     }
 
     @GetMapping(path = "/today")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public List<Menu> getTodayMenu() {
         return menuService.getByDate(LocalDate.now());
     }

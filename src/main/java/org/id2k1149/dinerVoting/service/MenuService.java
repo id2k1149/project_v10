@@ -37,29 +37,30 @@ public class MenuService {
     }
 
     public Menu getMenu(Long id) {
-        if (menuRepo.existsById(id)) return menuRepo.getById(id);
-        else {
+        if (menuRepo.findById(id).isPresent()) {
+            return menuRepo.getById(id);
+        } else {
             log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
     }
 
-    public Menu addMenu(Menu newMenu, Long answerId) {
-        if (dinerRepo.existsById(answerId)) {
-            if (menuRepo.findByDateAndDiner(LocalDate.now(), dinerRepo.getById(answerId)) == null) {
-                newMenu.setDiner(dinerRepo.getById(answerId));
+    public Menu addMenu(Menu newMenu, Long dinerId) {
+        if (dinerRepo.findById(dinerId).isPresent()) {
+            if (menuRepo.findByDateAndDiner(LocalDate.now(), dinerRepo.getById(dinerId)) == null) {
+                newMenu.setDiner(dinerRepo.getById(dinerId));
             } else throw new MenuException("Can't add new Menu, need to edit");
             menuRepo.save(newMenu);
             return newMenu;
 
         } else {
-            log.error("Id {} does not exist in DB", answerId);
-            throw new NotFoundException("Id " + answerId + " does not exists");
+            log.error("Id {} does not exist in DB", dinerId);
+            throw new NotFoundException("Id " + dinerId + " does not exists");
         }
     }
 
     public void updateMenu(Menu menu, Long id) {
-        if (menuRepo.existsById(id)) {
+        if (menuRepo.findById(id).isPresent()) {
             if (counterRepo.getFirstByDate(menu.getDate()).isEmpty()) {
                 Menu menuToUpdate = menuRepo.getById(id);
                 menuToUpdate.setDiner(menu.getDiner());
@@ -74,8 +75,9 @@ public class MenuService {
     }
 
     public void deleteMenu(Long id) {
-        if (menuRepo.existsById(id)) menuRepo.deleteById(id);
-        else {
+        if (menuRepo.findById(id).isPresent()) {
+            menuRepo.deleteById(id);
+        } else {
             log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
