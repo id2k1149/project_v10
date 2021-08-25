@@ -31,8 +31,9 @@ public class VoterService {
     }
 
     public Voter getVoter(Long id) {
-        if (voterRepo.existsById(id)) return voterRepo.getById(id);
-        else {
+        if (voterRepo.findById(id).isPresent()) {
+            return voterRepo.getById(id);
+        } else {
             log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
@@ -44,7 +45,7 @@ public class VoterService {
     }
 
     public void updateVoter(Long id, Voter voter) {
-        if (voterRepo.existsById(id)) {
+        if (voterRepo.findById(id).isPresent()) {
             Voter voterToUpdate = voterRepo.getById(id);
             voterToUpdate.setDiner(voter.getDiner());
             voterToUpdate.setDate(voter.getDate());
@@ -57,8 +58,9 @@ public class VoterService {
     }
 
     public void deleteVoter(Long id) {
-        if (voterRepo.existsById(id)) voterRepo.deleteById(id);
-        else {
+        if (voterRepo.findById(id).isPresent()) {
+            voterRepo.deleteById(id);
+        } else {
             log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
