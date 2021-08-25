@@ -31,8 +31,9 @@ public class DinerService {
     }
 
     public Diner getDiner(Long id) {
-        if (dinerRepo.existsById(id)) return dinerRepo.getById(id);
-        else {
+        if (dinerRepo.findById(id).isPresent()) {
+            return dinerRepo.getById(id);
+        } else {
             log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
@@ -47,7 +48,7 @@ public class DinerService {
 
     public void updateDiner(Diner diner,
                             Long id) {
-        if (dinerRepo.existsById(id)) {
+        if (dinerRepo.findById(id).isPresent()) {
             Diner dinerToUpdate = dinerRepo.getById(id);
             if (diner.getTitle() != null) {
                 dinerToUpdate.setTitle(diner.getTitle());
@@ -60,8 +61,9 @@ public class DinerService {
     }
 
     public void deleteDiner(Long id) {
-        if (dinerRepo.existsById(id)) dinerRepo.deleteById(id);
-        else {
+        if (dinerRepo.findById(id).isPresent()) {
+            dinerRepo.deleteById(id);
+        } else {
             log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
