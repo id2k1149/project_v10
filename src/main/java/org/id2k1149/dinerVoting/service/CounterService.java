@@ -38,8 +38,9 @@ public class CounterService {
     }
 
     public Counter getCounter(Long id) {
-        if (counterRepo.existsById(id)) return counterRepo.getById(id);
-        else {
+        if (counterRepo.existsById(id)) {
+            return counterRepo.getById(id);
+        } else {
             log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
@@ -64,14 +65,15 @@ public class CounterService {
     }
 
     public void deleteCounter(Long id) {
-        if (counterRepo.existsById(id)) counterRepo.deleteById(id);
-        else {
+        if (counterRepo.existsById(id)) {
+            counterRepo.deleteById(id);
+        } else {
             log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
     }
 
-    public void vote(Counter counter) {
+    public void addVoiceToCounter(Counter counter) {
         Counter newCounter = new Counter();
         Diner newDiner = counter.getDiner();
         int votes = 0;
@@ -110,11 +112,13 @@ public class CounterService {
         Counter counter = new Counter();
         counter.setDate(LocalDate.now());
         counter.setDiner(dinerRepo.getById(id));
-        vote(counter);
+        addVoiceToCounter(counter);
     }
 
     private void checkTime() {
-        if (LocalTime.now().getHour() > 23) throw new TimeException("You can't vote today. Vote tomorrow.");
+        if (LocalTime.now().getHour() > 23) {
+            throw new TimeException("You can't vote today. Vote tomorrow.");
+        }
     }
 
     private void checkTodayDinerList() {
