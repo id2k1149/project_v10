@@ -2,11 +2,12 @@ package org.id2k1149.dinerVoting.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.id2k1149.dinerVoting.exception.DuplicateNameException;
+import org.id2k1149.dinerVoting.exception.NotFoundException;
 import org.id2k1149.dinerVoting.model.Role;
 import org.id2k1149.dinerVoting.model.User;
 import org.id2k1149.dinerVoting.model.Voter;
 import org.id2k1149.dinerVoting.repo.UserRepo;
-import org.id2k1149.dinerVoting.exception.*;
 import org.id2k1149.dinerVoting.repo.VoterRepo;
 import org.id2k1149.dinerVoting.to.UserVotesTo;
 import org.id2k1149.dinerVoting.to.VoterTo;
@@ -20,7 +21,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -59,8 +62,9 @@ public class UserService implements UserDetailsService {
     }
 
     public User getUser(Long id) {
-        if (userRepo.existsById(id)) return userRepo.getById(id);
-        else {
+        if (userRepo.findById(id).isPresent()) {
+            return userRepo.getById(id);
+        } else {
             log.error("User with id {} does not exist in DB", id);
             throw new NotFoundException("User with id " + id + " does not exists");
         }
@@ -70,7 +74,7 @@ public class UserService implements UserDetailsService {
         Optional<User> optionalUser = Optional.ofNullable(userRepo.findByUsername(user.getUsername()));
         if (optionalUser.isPresent()) {
             log.error("The name {} is already used", user.getUsername());
-            throw new BadRequestException("The name " + user.getUsername() + " is already used");
+            throw new DuplicateNameException("The name " + user.getUsername() + " is already used");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (user.getRole() == null) {
@@ -85,7 +89,7 @@ public class UserService implements UserDetailsService {
     public void updateUser(User user,
                            Long id) {
 
-        if (userRepo.existsById(id)) {
+        if (userRepo.findById(id).isPresent()) {
             User userToUpdate = userRepo.getById(id);
 
             String newName = user.getUsername();
@@ -113,8 +117,9 @@ public class UserService implements UserDetailsService {
     }
 
     public void deleteUser(Long id) {
-        if (userRepo.existsById(id)) userRepo.deleteById(id);
-        else {
+        if (userRepo.findById(id).isPresent()) {
+            userRepo.deleteById(id);
+        } else {
             log.error("User with id {} does not exist in DB", id);
             throw new NotFoundException("User with id " + id + " does not exists");
         }
@@ -131,7 +136,7 @@ public class UserService implements UserDetailsService {
     }
 
     public UserVotesTo getUserAllVotes(Long id) {
-        if (userRepo.existsById(id)) {
+        if (userRepo.findById(id).isPresent()) {
             List<Voter> voterList = voterRepo.findAllByUser(getUser(id));
             List<VoterTo> voterToList = VoterUtil.getVoterTo(getUser(id), voterList);
             return new UserVotesTo(id, getUser(id).getUsername(), voterToList);

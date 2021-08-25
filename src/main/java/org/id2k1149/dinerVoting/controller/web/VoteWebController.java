@@ -57,7 +57,7 @@ public class VoteWebController {
             log.error("wrong answer");
             return "redirect:/vote";
         }
-        counterService.vote(counter);
+        counterService.addVoiceToCounter(counter);
         return "redirect:/result";
     }
 

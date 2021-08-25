@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.groups.Default;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -15,33 +17,30 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping(path = UserController.REST_URL)
+@PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    static final String REST_URL = "/api/v1/users";
 
     @GetMapping()
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.ok().body(userService.getUsers());
+    public List<User> getUsers() {
+        return userService.getUsers();
     }
 
     @GetMapping(path = "/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
-        URI uri = URI.create(ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/api/v1/users/{id}")
-                .toUriString());
-        return ResponseEntity.created(uri).body(userService.getUser(id));
+    public User getUser(@PathVariable Long id) {
+        return userService.getUser(id);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> addUser(@RequestBody User user) {
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<User> addUser(@Validated(Default.class) @RequestBody User user) {
         User created = userService.addUser(user);
         URI uriOfNewResource = URI.create(ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/api/v1/users/{id}")
+                .path(REST_URL + "/{id}")
                 .toUriString());
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
@@ -64,7 +63,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/{id}/votes")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public UserVotesTo getUserVotes(@PathVariable Long id) {
         return userService.getUserAllVotes(id);
     }
