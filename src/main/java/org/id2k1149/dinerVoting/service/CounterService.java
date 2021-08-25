@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.id2k1149.dinerVoting.exception.NotFoundException;
 import org.id2k1149.dinerVoting.exception.TimeException;
 import org.id2k1149.dinerVoting.model.Diner;
-import org.id2k1149.dinerVoting.model.VoiceCounter;
+import org.id2k1149.dinerVoting.model.Counter;
 import org.id2k1149.dinerVoting.model.Menu;
 import org.id2k1149.dinerVoting.repo.DinerRepo;
 import org.id2k1149.dinerVoting.repo.CounterRepo;
@@ -32,12 +32,12 @@ public class CounterService {
     private final MenuRepo menuRepo;
     private final VoterService voterService;
 
-    public List<VoiceCounter> getCounters() {
+    public List<Counter> getCounters() {
         log.info("Find all counters in DB");
         return counterRepo.findAll();
     }
 
-    public VoiceCounter getCounter(Long id) {
+    public Counter getCounter(Long id) {
         if (counterRepo.existsById(id)) return counterRepo.getById(id);
         else {
             log.error("Id {} does not exist in DB", id);
@@ -45,18 +45,18 @@ public class CounterService {
         }
     }
 
-    public VoiceCounter addCounter(VoiceCounter newVoiceCounter) {
-        counterRepo.save(newVoiceCounter);
-        return newVoiceCounter;
+    public Counter addCounter(Counter newCounter) {
+        counterRepo.save(newCounter);
+        return newCounter;
     }
 
-    public void updateCounter(Long id, VoiceCounter voiceCounter) {
+    public void updateCounter(Long id, Counter counter) {
         if (counterRepo.existsById(id)) {
-            VoiceCounter voiceCounterToUpdate = counterRepo.getById(id);
-            voiceCounterToUpdate.setDiner(voiceCounter.getDiner());
-            voiceCounterToUpdate.setDate(voiceCounter.getDate());
-            voiceCounterToUpdate.setVotes(voiceCounter.getVotes());
-            counterRepo.save(voiceCounterToUpdate);
+            Counter counterToUpdate = counterRepo.getById(id);
+            counterToUpdate.setDiner(counter.getDiner());
+            counterToUpdate.setDate(counter.getDate());
+            counterToUpdate.setVotes(counter.getVotes());
+            counterRepo.save(counterToUpdate);
         } else {
             log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
@@ -71,35 +71,35 @@ public class CounterService {
         }
     }
 
-    public void vote(VoiceCounter voiceCounter) {
-        VoiceCounter newVoiceCounter = new VoiceCounter();
-        Diner newDiner = voiceCounter.getDiner();
+    public void vote(Counter counter) {
+        Counter newCounter = new Counter();
+        Diner newDiner = counter.getDiner();
         int votes = 0;
-        Optional<VoiceCounter> optionalVotesCounter = counterRepo
+        Optional<Counter> optionalVotesCounter = counterRepo
                 .findByDateAndDiner(LocalDate.now(), newDiner);
         if (optionalVotesCounter.isPresent()) {
-            newVoiceCounter = optionalVotesCounter.get();
-            votes = newVoiceCounter.getVotes();
+            newCounter = optionalVotesCounter.get();
+            votes = newCounter.getVotes();
         }
         votes += 1;
-        newVoiceCounter.setDiner(newDiner);
-        newVoiceCounter.setVotes(votes);
-        counterRepo.save(newVoiceCounter);
+        newCounter.setDiner(newDiner);
+        newCounter.setVotes(votes);
+        counterRepo.save(newCounter);
         voterService.checkVoter(newDiner);
     }
 
-    public List<VoiceCounter> getAllResults() {
-        List<VoiceCounter> voiceCounterList = counterRepo.findAllByDate(LocalDate.now());
-        return (voiceCounterList.size() == 0 ? voiceCounterList : voiceCounterList.stream()
-                .sorted(Comparator.comparingInt(VoiceCounter::getVotes).reversed())
+    public List<Counter> getAllResults() {
+        List<Counter> counterList = counterRepo.findAllByDate(LocalDate.now());
+        return (counterList.size() == 0 ? counterList : counterList.stream()
+                .sorted(Comparator.comparingInt(Counter::getVotes).reversed())
                 .collect(Collectors.toList()));
     }
 
-    public VoiceCounter getBestResult() {
-        List<VoiceCounter> sortedList = getAllResults();
+    public Counter getBestResult() {
+        List<Counter> sortedList = getAllResults();
         return sortedList
                 .stream()
-                .max(Comparator.comparing(VoiceCounter::getVotes))
+                .max(Comparator.comparing(Counter::getVotes))
                 .orElseThrow(NoSuchElementException::new);
     }
 
@@ -107,10 +107,10 @@ public class CounterService {
     public void voteForDiner(Long id) {
         checkTime();
         checkTodayDinerList();
-        VoiceCounter voiceCounter = new VoiceCounter();
-        voiceCounter.setDate(LocalDate.now());
-        voiceCounter.setDiner(dinerRepo.getById(id));
-        vote(voiceCounter);
+        Counter counter = new Counter();
+        counter.setDate(LocalDate.now());
+        counter.setDiner(dinerRepo.getById(id));
+        vote(counter);
     }
 
     private void checkTime() {

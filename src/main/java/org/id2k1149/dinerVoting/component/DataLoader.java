@@ -46,12 +46,12 @@ public class DataLoader implements ApplicationRunner {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 Diner diner = dinerRepo.findAll().get(new Random().nextInt(2));
-                Optional<VoiceCounter> optionalCounter = counterRepo.findByDateAndDiner(LocalDate.now().minusDays(2 - i), diner);
-                VoiceCounter voiceCounter = (optionalCounter.isEmpty() ? new VoiceCounter() : optionalCounter.get());
-                voiceCounter.setDate(LocalDate.now().minusDays(2 - i));
-                voiceCounter.setDiner(diner);
-                voiceCounter.setVotes(optionalCounter.isEmpty() ? 1 : 2);
-                counterRepo.save(voiceCounter);
+                Optional<Counter> optionalCounter = counterRepo.findByDateAndDiner(LocalDate.now().minusDays(2 - i), diner);
+                Counter counter = (optionalCounter.isEmpty() ? new Counter() : optionalCounter.get());
+                counter.setDate(LocalDate.now().minusDays(2 - i));
+                counter.setDiner(diner);
+                counter.setVotes(optionalCounter.isEmpty() ? 1 : 2);
+                counterRepo.save(counter);
                 Voter voter = new Voter();
                 voter.setDate(LocalDate.now().minusDays(2 - i));
                 voter.setUser(userRepo.findAll().get(j));

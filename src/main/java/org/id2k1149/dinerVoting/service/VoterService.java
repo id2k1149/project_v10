@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.id2k1149.dinerVoting.exception.NotFoundException;
 import org.id2k1149.dinerVoting.model.Diner;
-import org.id2k1149.dinerVoting.model.VoiceCounter;
+import org.id2k1149.dinerVoting.model.Counter;
 import org.id2k1149.dinerVoting.model.User;
 import org.id2k1149.dinerVoting.model.Voter;
 import org.id2k1149.dinerVoting.repo.CounterRepo;
@@ -72,12 +72,12 @@ public class VoterService {
         if (optionalVoter.isPresent()) {
             voter = optionalVoter.get();
             Diner voterDiner = voter.getDiner();
-            VoiceCounter oldVoiceCounter = counterRepo
+            Counter oldCounter = counterRepo
                     .findByDateAndDiner(LocalDate.now(), voterDiner)
                     .get();
-            int votes = oldVoiceCounter.getVotes() - 1;
-            oldVoiceCounter.setVotes(votes);
-            counterRepo.save(oldVoiceCounter);
+            int votes = oldCounter.getVotes() - 1;
+            oldCounter.setVotes(votes);
+            counterRepo.save(oldCounter);
         }
         voter.setDiner(newDiner);
         voterRepo.save(voter);
