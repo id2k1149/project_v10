@@ -20,36 +20,32 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/diners")
+@RequestMapping(path = DinerController.REST_URL)
+@PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
 @RequiredArgsConstructor
 public class DinerController {
     private final DinerService dinerService;
     private final MenuService menuService;
     private final CounterService counterService;
+    static final String REST_URL = "/api/v1/diners";
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<List<Diner>> getAnswers() {
-        return ResponseEntity.ok().body(dinerService.getDiners());
+    public List<Diner> getDiners() {
+        return dinerService.getDiners();
     }
 
     @GetMapping(path = "{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<Diner> getAnswer(@PathVariable Long id) {
-        URI uri = URI.create(ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/api/v1/diners/{id}")
-                .toUriString());
-        return ResponseEntity.created(uri).body(dinerService.getDiner(id));
+    public Diner getDiner(@PathVariable Long id) {
+        return dinerService.getDiner(id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Diner> addAnswer(@RequestBody Diner newDiner) {
+    public ResponseEntity<Diner> addDiner(@RequestBody Diner newDiner) {
         Diner created = dinerService.addDiner(newDiner);
         URI uriOfNewResource = URI.create(ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/api/v1/diners/{id}")
+                .path(REST_URL + "/{id}")
                 .toUriString());
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
@@ -57,7 +53,7 @@ public class DinerController {
     @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateAnswer(
+    public void updateDiner(
             @RequestBody Diner diner,
             @PathVariable Long id
     ) {
@@ -67,20 +63,18 @@ public class DinerController {
     @DeleteMapping(path = "{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAnswer(@PathVariable Long id) {
+    public void deleteDiner(@PathVariable Long id) {
         dinerService.deleteDiner(id);
     }
 
     @GetMapping("/today")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public List<DinerTo> getTodayInfo() {
+    public List<DinerTo> getTodayMenu() {
         return DinerUtil.getDinersTo(
                 menuService.getDinersMenuByDate(LocalDate.now()),
                 menuService.getByDate(LocalDate.now()));
     }
 
     @GetMapping(path = "{id}/menu")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public DinerTo getAllMenuForDiner(@PathVariable Long id) {
         return dinerService.getAllMenuForDiner(id);
     }
@@ -94,14 +88,12 @@ public class DinerController {
     }
 
     @GetMapping(path = "{id}/today")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public DinerTo getTodayMenuForDiner(@PathVariable Long id) {
         return dinerService.getTodayMenuForDiner(id);
     }
 
 
     @PostMapping(path = "{id}/vote", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public void voteForDiner(
             @PathVariable Long id) {
         counterService.voteForDiner(id);

@@ -8,11 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.groups.Default;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -34,9 +33,9 @@ public class UserController {
         return userService.getUser(id);
     }
 
-    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/registration", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("permitAll()")
-    public ResponseEntity<User> addUser(@Validated(Default.class) @RequestBody User user) {
+    public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
         User created = userService.addUser(user);
         URI uriOfNewResource = URI.create(ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -49,6 +48,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateUser(
+            @Valid
             @RequestBody User user,
             @PathVariable Long id
     ) {
