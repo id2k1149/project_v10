@@ -14,34 +14,29 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/voters")
+@RequestMapping(path = VoterController.REST_URL)
+@PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
 @RequiredArgsConstructor
 public class VoterController {
     private final VoterService voterService;
+    static final String REST_URL = "/api/v1/voters";
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<List<Voter>> getVoters() {
-        return ResponseEntity.ok().body(voterService.getVoters());
+    public List<Voter> getVoters() {
+        return voterService.getVoters();
     }
 
     @GetMapping(path = "{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<Voter> getVoter(@PathVariable Long id) {
-        URI uri = URI.create(ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/api/v1/voters/{id}")
-                .toUriString());
-        return ResponseEntity.created(uri).body(voterService.getVoter(id));
+    public Voter getVoter(@PathVariable Long id) {
+        return voterService.getVoter(id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<Voter> addVoter(@RequestBody Voter newVoter) {
         Voter created = voterService.addVoter(newVoter);
         URI uriOfNewResource = URI.create(ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/api/v1/voters/{id}")
+                .path(REST_URL + "/{id}")
                 .toUriString());
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
