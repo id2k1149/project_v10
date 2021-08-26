@@ -21,11 +21,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
-    @Size(min = 6, max = 32)
+    @Size(min = 5, max = 32)
     @NotBlank
     private String username;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Size(min = 8, max = 32)
+    @Size(min = 6, max = 64)
     @NotBlank
     private String password;
     @Transient

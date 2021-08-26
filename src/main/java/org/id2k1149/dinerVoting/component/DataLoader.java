@@ -76,7 +76,7 @@ public class DataLoader implements ApplicationRunner {
                         .mapToObj(j -> dinerRepo.findAll().get(j))
                         .forEach(diner -> {
                             Map<String, BigDecimal> dishes = new HashMap<>();
-                            IntStream.range(0, 3)
+                            IntStream.range(0, 2)
                                     .mapToObj(k -> new Faker().food().dish())
                                     .forEach(stringInfo -> {
                                         BigDecimal digitalInfo = BigDecimal
@@ -100,7 +100,7 @@ public class DataLoader implements ApplicationRunner {
     public void addUsers() {
         IntStream.range(0, 2).forEach(i -> {
             User user = new User();
-            user.setUsername(i == 0 ? "admin" : "user");
+            user.setUsername(i == 0 ? "admin" : "user1");
             user.setPassword(passwordEncoder.encode("password"));
             user.setRole(i == 0 ? ADMIN : USER);
             userRepo.save(user);
