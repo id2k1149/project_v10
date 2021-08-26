@@ -74,19 +74,6 @@ public class DinerController {
                 menuService.getByDate(LocalDate.now()));
     }
 
-    @GetMapping(path = "{id}/menu")
-    public DinerTo getAllMenuForDiner(@PathVariable Long id) {
-        return dinerService.getAllMenuForDiner(id);
-    }
-
-    @PostMapping(path = "{id}/menu", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void addMenuForDiner(
-            @RequestBody Menu menu,
-            @PathVariable Long id) {
-        menuService.addMenu(menu, id);
-    }
-
     @GetMapping(path = "{id}/today")
     public DinerTo getTodayMenuForDiner(@PathVariable Long id) {
         return dinerService.getTodayMenuForDiner(id);

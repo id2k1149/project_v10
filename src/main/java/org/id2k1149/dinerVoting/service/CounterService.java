@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 public class CounterService {
     private final CounterRepo counterRepo;
@@ -46,11 +45,13 @@ public class CounterService {
         }
     }
 
+    @Transactional
     public Counter addCounter(Counter newCounter) {
         counterRepo.save(newCounter);
         return newCounter;
     }
 
+    @Transactional
     public void updateCounter(Long id, Counter counter) {
         if (counterRepo.existsById(id)) {
             Counter counterToUpdate = counterRepo.getById(id);
@@ -64,6 +65,7 @@ public class CounterService {
         }
     }
 
+    @Transactional
     public void deleteCounter(Long id) {
         if (counterRepo.existsById(id)) {
             counterRepo.deleteById(id);
@@ -73,6 +75,7 @@ public class CounterService {
         }
     }
 
+    @Transactional
     public void addVoiceToCounter(Counter counter) {
         Counter newCounter = new Counter();
         Diner newDiner = counter.getDiner();
@@ -105,13 +108,13 @@ public class CounterService {
                 .orElseThrow(NoSuchElementException::new);
     }
 
-
+    @Transactional
     public void voteForDiner(Long id) {
-        checkTime();
         checkTodayDinerList();
         Counter counter = new Counter();
         counter.setDate(LocalDate.now());
         counter.setDiner(dinerRepo.getById(id));
+        checkTime();
         addVoiceToCounter(counter);
     }
 

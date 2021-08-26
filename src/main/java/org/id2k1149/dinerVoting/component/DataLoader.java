@@ -62,7 +62,7 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private void addMenu() {
-        IntStream.range(0, 3)
+        IntStream.range(0, 2)
                 .mapToObj(i -> LocalDate.now().minusDays(2 - i))
                 .forEach(localDate -> IntStream.range(0, 2)
                         .mapToObj(j -> dinerRepo.findAll().get(j))

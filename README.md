@@ -15,34 +15,36 @@ Each diner provides a new menu each day.
 #### add a new User
 `curl -s -X POST -d '{"username":"newUser", "password":"password"}'
 -H 'Content-Type:application/json;charset=UTF-8'
--L 'http://localhost:8080/api/v1/users'`
+-L 'http://localhost:8080/api/v1/users/registration'`
 
-#### add a new Answer/Restaurant
+#### add a new Diner
 `curl -s -X POST -d '{"title":"New Diner"}' 
 -H 'Content-Type:application/json;charset=UTF-8' 
 -L 'http://localhost:8080/api/v1/diners' -u admin:password`
 
-#### add a new Menu/Menu to Answer#3/Restaurant#3
+#### add a new Menu to Diner#3
 `curl -s -X POST -d '{"details": { "New Toast": 35.92, "New Ribs": 63.85 } }' 
 -H 'Content-Type:application/json;charset=UTF-8' 
 -L 'http://localhost:8080/api/v1/diners/3/menu' -u admin:password`
 
-#### get today Menu/Menu from all Answers/Restaurants
+#### add a new Menu to Diner#4
+`curl -s -X POST -d '{"details": { "Pizza": 15.92, "Fish and Chips": 23.15 } }'
+-H 'Content-Type:application/json;charset=UTF-8'
+-L 'http://localhost:8080/api/v1/diners/4/menu' -u admin:password`
+
+#### get today Menu from all Diners
 `curl -s -L 'http://localhost:8080/api/v1/diners/today' -u user:password`
 
-#### vote for Answer#3/Restaurant#3
+#### vote for Diner#3
 `curl -X POST 
 -H 'Content-Type:application/json;charset=UTF-8' 
 -L 'http://localhost:8080/api/v1/diners/3/vote' -u user:password`
 
 #### get today voting results
-`curl -L 'http://localhost:8080/api/v1/votes/today' -u user:password`
+`curl -L 'http://localhost:8080/api/v1/counters/today' -u user:password`
 
 #### get today best result
-`curl -L 'http://localhost:8080/api/v1/votes/best' -u user:password`
+`curl -L 'http://localhost:8080/api/v1/counters/best' -u user:password`
 
-#### get all history of how User#1 voted
-`curl -L 'http://localhost:8080/api/v1/users/1/votes' -u user:password`
-
-#### get all history of Answer#3/Restaurant#3 Menu/Menu
-`curl -L 'http://localhost:8080/api/v1/diners/3/menu' -u user:password`
+#### get all history of how User#2 voted
+`curl -L 'http://localhost:8080/api/v1/users/2/votes' -u admin:password`
