@@ -76,7 +76,7 @@ public class DataLoader implements ApplicationRunner {
                         .mapToObj(j -> dinerRepo.findAll().get(j))
                         .forEach(diner -> {
                             Map<String, BigDecimal> dishes = new HashMap<>();
-                            IntStream.range(0, 2)
+                            IntStream.range(0, 3)
                                     .mapToObj(k -> new Faker().food().dish())
                                     .forEach(stringInfo -> {
                                         BigDecimal digitalInfo = BigDecimal

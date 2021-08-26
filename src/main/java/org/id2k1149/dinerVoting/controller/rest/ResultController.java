@@ -1,5 +1,6 @@
 package org.id2k1149.dinerVoting.controller.rest;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.dinerVoting.model.Counter;
 import org.id2k1149.dinerVoting.service.CounterService;
@@ -24,5 +25,13 @@ public class ResultController {
     @GetMapping(path = "best")
     public Counter getTodayBestResult() {
         return counterService.getTodayBestResult();
+    }
+
+    @PostMapping(path = "{dinerId}")
+    @ApiOperation(
+            value = "Vote for diner with dinerId",
+            notes = "Current user votes for diner with dinerId")
+    public void voteForDiner(@PathVariable Long dinerId) {
+        counterService.voteForDiner(dinerId);
     }
 }
