@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.List;
 import java.util.Random;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -52,7 +51,7 @@ class DinerServiceTest {
 
     @Test
     void getDiners() {
-        dinerService.getDiners();
+        dinerService.getAllDiners();
         verify(dinerRepo).findAll();
     }
 

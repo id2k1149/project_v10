@@ -25,7 +25,7 @@ public class DinerService {
     private final DinerRepo dinerRepo;
     private final MenuRepo menuRepo;
 
-    public List<Diner> getDiners() {
+    public List<Diner> getAllDiners() {
         log.info("Find all diners in DB");
         return dinerRepo.findAll();
     }
@@ -77,6 +77,12 @@ public class DinerService {
 
     public DinerTo getTodayMenuForDiner(Long id) {
         List<Menu> menuList = menuRepo.findAllByDate(LocalDate.now());
+        List<MenuTo> menuToList = MenuUtil.getMenuTo(getDiner(id), menuList);
+        return new DinerTo(id, getDiner(id).getTitle(), menuToList);
+    }
+
+    public DinerTo getMenuHistoryForDiner(Long id) {
+        List<Menu> menuList = menuRepo.findAllByDiner(getDiner(id));
         List<MenuTo> menuToList = MenuUtil.getMenuTo(getDiner(id), menuList);
         return new DinerTo(id, getDiner(id).getTitle(), menuToList);
     }

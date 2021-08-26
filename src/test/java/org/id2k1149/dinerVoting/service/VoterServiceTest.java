@@ -60,7 +60,7 @@ class VoterServiceTest {
 
     @Test
     void getVoters() {
-        voterService.getVoters();
+        voterService.getAllVoters();
         verify(voterRepo).findAll();
     }
 

@@ -24,7 +24,7 @@ public class VoterService {
     private final CounterRepo counterRepo;
     private final UserService userService;
 
-    public List<Voter> getVoters() {
+    public List<Voter> getAllVoters() {
         log.info("Find all voters in DB");
         return voterRepo.findAll();
     }

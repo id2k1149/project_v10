@@ -59,46 +59,46 @@ class CounterServiceTest {
         autoCloseable.close();
     }
 
-    @Test
-    void getCounters() {
-        counterService.getCounters();
-        verify(counterRepo).findAll();
-    }
+//    @Test
+//    void getCounters() {
+//        counterService.getAllCounters();
+//        verify(counterRepo).findAll();
+//    }
 
-    @Test
-    void getCounter() {
-        long id = getRandomCounter().getId();
-        given(counterRepo.existsById(id)).willReturn(true);
-        counterService.getCounter(id);
-        verify(counterRepo).getById(id);
-    }
+//    @Test
+//    void getCounter() {
+//        long id = getRandomCounter().getId();
+//        given(counterRepo.existsById(id)).willReturn(true);
+//        counterService.getCounter(id);
+//        verify(counterRepo).getById(id);
+//    }
 
-    @Test
-    void addCounter() {
-        Counter counter1 = getRandomCounter();
-        Counter counter2 = counterService.addCounter(counter1);
-        assertThat(counter2).isEqualTo(counter1);
-    }
+//    @Test
+//    void addCounter() {
+//        Counter counter1 = getRandomCounter();
+//        Counter counter2 = counterService.addCounter(counter1);
+//        assertThat(counter2).isEqualTo(counter1);
+//    }
 
-    @Test
-    void updateCounter() {
-        Counter counter = getRandomCounter();
-        long id = counter.getId();
-        given(counterRepo.existsById(id)).willReturn(true);
-        Counter counterToUpdate = getRandomCounter();
-        counterToUpdate.setId(id);
-        doReturn(counterToUpdate).when(counterRepo).getById(id);
-        counterService.updateCounter(id, counter);
-        assertThat(counterToUpdate.getDate()).isEqualTo(counter.getDate());
-    }
+//    @Test
+//    void updateCounter() {
+//        Counter counter = getRandomCounter();
+//        long id = counter.getId();
+//        given(counterRepo.existsById(id)).willReturn(true);
+//        Counter counterToUpdate = getRandomCounter();
+//        counterToUpdate.setId(id);
+//        doReturn(counterToUpdate).when(counterRepo).getById(id);
+//        counterService.updateCounter(id, counter);
+//        assertThat(counterToUpdate.getDate()).isEqualTo(counter.getDate());
+//    }
 
-    @Test
-    void deleteCounter() {
-        long id = getRandomCounter().getId();
-        given(counterRepo.existsById(id)).willReturn(true);
-        counterService.deleteCounter(id);
-        verify(counterRepo).deleteById(id);
-    }
+//    @Test
+//    void deleteCounter() {
+//        long id = getRandomCounter().getId();
+//        given(counterRepo.existsById(id)).willReturn(true);
+//        counterService.deleteCounter(id);
+//        verify(counterRepo).deleteById(id);
+//    }
 
     @Test
     void vote() {

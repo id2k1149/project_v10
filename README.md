@@ -12,8 +12,7 @@ If it is before 11:00 we assume that he changed his mind.
 If it is after 11:00 then it is too late, vote can't be changed
 Each diner provides a new menu each day.
 
-Swagger Api Documentation - http://localhost:8080/v2/api-docs
-Api Docs in JSON - http://localhost:8080/v2/api-docs
+Swagger Api Documentation (admin/password) - http://localhost:8080/swagger-ui.html
 
 #### add a new User
 `curl -s -X POST -d '{"username":"newUser", "password":"password"}'
