@@ -27,7 +27,6 @@ import java.util.List;
 public class DinerController {
     private final DinerService dinerService;
     private final MenuService menuService;
-    private final CounterService counterService;
     static final String REST_URL = "/api/v1/diners";
 
     @GetMapping
@@ -75,17 +74,11 @@ public class DinerController {
                 menuService.getByDate(LocalDate.now()));
     }
 
-    @GetMapping(path = "{id}/today")
-    public DinerTo getTodayMenuForDiner(@PathVariable Long id) {
-        return dinerService.getTodayMenuForDiner(id);
-    }
+//    @GetMapping(path = "{id}/today")
+//    public DinerTo getTodayMenuForDiner(@PathVariable Long id) {
+//        return dinerService.getTodayMenuForDiner(id);
+//    }
 
-
-    @PostMapping(path = "{id}/vote", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void voteForDiner(
-            @PathVariable Long id) {
-        counterService.voteForDiner(id);
-    }
 
     @GetMapping(path = "{id}/history")
     @ApiOperation(

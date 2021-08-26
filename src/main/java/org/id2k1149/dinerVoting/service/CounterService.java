@@ -4,19 +4,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.id2k1149.dinerVoting.exception.NoResultsException;
 import org.id2k1149.dinerVoting.exception.NotFoundException;
-import org.id2k1149.dinerVoting.exception.TimeException;
-import org.id2k1149.dinerVoting.model.Diner;
 import org.id2k1149.dinerVoting.model.Counter;
+import org.id2k1149.dinerVoting.model.Diner;
 import org.id2k1149.dinerVoting.model.Menu;
-import org.id2k1149.dinerVoting.repo.DinerRepo;
+import org.id2k1149.dinerVoting.model.Voter;
 import org.id2k1149.dinerVoting.repo.CounterRepo;
+import org.id2k1149.dinerVoting.repo.DinerRepo;
 import org.id2k1149.dinerVoting.repo.MenuRepo;
 import org.id2k1149.dinerVoting.util.DinerUtil;
+import org.id2k1149.dinerVoting.util.TimeUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -91,7 +91,7 @@ public class CounterService {
         newCounter.setDiner(newDiner);
         newCounter.setVotes(votes);
         counterRepo.save(newCounter);
-        voterService.saveVoter(newDiner);
+        voterService.saveVoterForDiner(newDiner);
     }
 
     public List<Counter> getTodayAllResults() {
@@ -116,26 +116,25 @@ public class CounterService {
     public void voteForDiner(Long id) {
         checkTodayDinerList();
         if (voterService.userVotedToday()) {
-
-        } else {
-
+            TimeUtil.checkTime();
+            Voter voter = voterService.getVoterByUserAndDate().get();
+            Diner voterDiner = voter.getDiner();
+            Counter oldCounter = counterRepo
+                    .findByDateAndDiner(LocalDate.now(), voterDiner)
+                    .get();
+            int votes = oldCounter.getVotes() - 1;
+            if (votes == 0) {
+                counterRepo.delete(oldCounter);
+            } else {
+                oldCounter.setVotes(votes);
+                counterRepo.save(oldCounter);
+            }
+            voterService.deleteVoter(voter.getId());
         }
-
-
-
         Counter counter = new Counter();
         counter.setDate(LocalDate.now());
         counter.setDiner(dinerRepo.getById(id));
-
-
-        checkTime();
         addVoiceToCounter(counter);
-    }
-
-    private void checkTime() {
-        if (LocalTime.now().getHour() > 23) {
-            throw new TimeException("You can't vote today. Vote tomorrow.");
-        }
     }
 
     private void checkTodayDinerList() {
