@@ -23,5 +23,5 @@ public class Menu {
     @ManyToOne
     private Diner diner;
     @ElementCollection
-    private Map<String, BigDecimal> dishPrice;
+    private Map<String, BigDecimal> dishAndPrice;
 }
