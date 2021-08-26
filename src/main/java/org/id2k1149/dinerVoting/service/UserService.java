@@ -27,7 +27,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 public class UserService implements UserDetailsService {
     private final UserRepo userRepo;
@@ -70,6 +69,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    @Transactional
     public User addUser(User user) {
         Optional<User> optionalUser = Optional.ofNullable(userRepo.findByUsername(user.getUsername()));
         if (optionalUser.isPresent()) {
@@ -102,6 +102,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    @Transactional
     public void deleteUser(Long id) {
         if (userRepo.findById(id).isPresent()) {
             userRepo.deleteById(id);

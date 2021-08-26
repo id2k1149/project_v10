@@ -36,6 +36,8 @@ class MenuServiceTest {
     private DinerRepo dinerRepo;
     @Mock
     private CounterRepo counterRepo;
+    @Mock
+    private DinerService dinerService;
 
     public static Menu getRandomInfo() {
         Menu menu = new Menu();

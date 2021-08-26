@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class VoterService {
@@ -39,11 +38,13 @@ public class VoterService {
         }
     }
 
+    @Transactional
     public Voter addVoter(Voter newVoter) {
         voterRepo.save(newVoter);
         return newVoter;
     }
 
+    @Transactional
     public void updateVoter(Long id, Voter voter) {
         if (voterRepo.findById(id).isPresent()) {
             Voter voterToUpdate = voterRepo.getById(id);
@@ -57,6 +58,7 @@ public class VoterService {
         }
     }
 
+    @Transactional
     public void deleteVoter(Long id) {
         if (voterRepo.findById(id).isPresent()) {
             voterRepo.deleteById(id);

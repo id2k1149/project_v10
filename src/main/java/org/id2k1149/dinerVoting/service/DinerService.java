@@ -2,6 +2,7 @@ package org.id2k1149.dinerVoting.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.id2k1149.dinerVoting.exception.DuplicateNameException;
 import org.id2k1149.dinerVoting.exception.NotFoundException;
 import org.id2k1149.dinerVoting.model.Diner;
 import org.id2k1149.dinerVoting.model.Menu;
@@ -19,7 +20,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 public class DinerService {
     private final DinerRepo dinerRepo;
@@ -39,13 +39,18 @@ public class DinerService {
         }
     }
 
+    @Transactional
     public Diner addDiner(Diner newDiner) {
         Optional<Diner> optionalDiner = Optional.ofNullable(dinerRepo.findDinerByTitle(newDiner.getTitle()));
-        assert optionalDiner.isEmpty() : "The name " + newDiner.getTitle() + " is already used";
+        if (optionalDiner.isPresent()) {
+            log.error("The name {} is already used", newDiner.getTitle());
+            throw new DuplicateNameException("The name " + newDiner.getTitle() + " is already used");
+        }
         dinerRepo.save(newDiner);
         return newDiner;
     }
 
+    @Transactional
     public void updateDiner(Diner diner,
                             Long id) {
         if (dinerRepo.findById(id).isPresent()) {
@@ -60,6 +65,7 @@ public class DinerService {
         }
     }
 
+    @Transactional
     public void deleteDiner(Long id) {
         if (dinerRepo.findById(id).isPresent()) {
             dinerRepo.deleteById(id);
@@ -67,12 +73,6 @@ public class DinerService {
             log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
-    }
-
-    public DinerTo getAllMenuForDiner(Long id) {
-        List<Menu> menuList = menuRepo.findAllByDiner(getDiner(id));
-        List<MenuTo> menuToList = MenuUtil.getMenuTo(getDiner(id), menuList);
-        return new DinerTo(id, getDiner(id).getTitle(), menuToList);
     }
 
     public DinerTo getTodayMenuForDiner(Long id) {

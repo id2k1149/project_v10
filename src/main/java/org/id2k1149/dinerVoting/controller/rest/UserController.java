@@ -24,6 +24,7 @@ public class UserController {
     static final String REST_URL = "/api/v1/users";
 
     @GetMapping()
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<User> getUsers() {
         return userService.getUsers();
     }

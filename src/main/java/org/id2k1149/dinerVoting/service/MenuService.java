@@ -12,7 +12,9 @@ import org.id2k1149.dinerVoting.repo.DinerRepo;
 import org.id2k1149.dinerVoting.repo.CounterRepo;
 import org.id2k1149.dinerVoting.repo.MenuRepo;
 import org.id2k1149.dinerVoting.to.DinerTo;
+import org.id2k1149.dinerVoting.to.MenuTo;
 import org.id2k1149.dinerVoting.util.DinerUtil;
+import org.id2k1149.dinerVoting.util.MenuUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +25,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class MenuService {
@@ -45,11 +46,12 @@ public class MenuService {
         }
     }
 
+    @Transactional
     public Menu addMenu(Menu newMenu, Long dinerId) {
         if (dinerRepo.findById(dinerId).isPresent()) {
             if (menuRepo.findByDateAndDiner(LocalDate.now(), dinerRepo.getById(dinerId)) == null) {
                 newMenu.setDiner(dinerRepo.getById(dinerId));
-            } else throw new MenuException("Can't add new Menu, need to edit");
+            } else throw new MenuException("This diner has a menu for today");
             menuRepo.save(newMenu);
             return newMenu;
 
@@ -59,6 +61,7 @@ public class MenuService {
         }
     }
 
+    @Transactional
     public void updateMenu(Menu menu, Long id) {
         if (menuRepo.findById(id).isPresent()) {
             if (counterRepo.getFirstByDate(menu.getDate()).isEmpty()) {
@@ -74,6 +77,7 @@ public class MenuService {
         }
     }
 
+    @Transactional
     public void deleteMenu(Long id) {
         if (menuRepo.findById(id).isPresent()) {
             menuRepo.deleteById(id);
