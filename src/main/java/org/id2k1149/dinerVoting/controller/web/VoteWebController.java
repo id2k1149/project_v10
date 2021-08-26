@@ -31,7 +31,7 @@ public class VoteWebController {
     public String survey(Model model) {
         List<DinerTo> dinersList = menuService.getTodayDinersList();
         if (dinersList.size() > 0) {
-            if (!counterService.checkTodayCounter()) {
+            if (!counterService.getTodayCounter()) {
                 model.addAttribute("info3", "Can't create a new poll because there were votes today");
             }
             Optional<Voter> optionalVoter = voterService.getVoterByUserAndDate();
@@ -72,7 +72,7 @@ public class VoteWebController {
     @GetMapping("/update")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String everyDayUpdate() {
-        if (counterService.checkTodayCounter()) menuService.everyDayUpdate(LocalDate.now());
+        if (counterService.getTodayCounter()) menuService.everyDayUpdate(LocalDate.now());
         return "redirect:/vote";
     }
 }

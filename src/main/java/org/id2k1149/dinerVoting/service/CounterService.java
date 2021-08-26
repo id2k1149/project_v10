@@ -91,7 +91,7 @@ public class CounterService {
         newCounter.setDiner(newDiner);
         newCounter.setVotes(votes);
         counterRepo.save(newCounter);
-        voterService.checkVoter(newDiner);
+        voterService.saveVoter(newDiner);
     }
 
     public List<Counter> getTodayAllResults() {
@@ -115,9 +115,19 @@ public class CounterService {
     @Transactional
     public void voteForDiner(Long id) {
         checkTodayDinerList();
+        if (voterService.userVotedToday()) {
+
+        } else {
+
+        }
+
+
+
         Counter counter = new Counter();
         counter.setDate(LocalDate.now());
         counter.setDiner(dinerRepo.getById(id));
+
+
         checkTime();
         addVoiceToCounter(counter);
     }
@@ -139,7 +149,7 @@ public class CounterService {
                         .findAllByDate(LocalDate.now())).size() == 0) throw new NotFoundException("Empty vote list");
     }
 
-    public boolean checkTodayCounter() {
+    public boolean getTodayCounter() {
         return counterRepo.getFirstByDate(LocalDate.now()).isEmpty();
     }
 }

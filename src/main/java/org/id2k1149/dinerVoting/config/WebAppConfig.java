@@ -39,8 +39,6 @@ public class WebAppConfig {
                 .apiInfo(apiDetails());
     }
 
-
-
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

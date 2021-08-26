@@ -9,6 +9,7 @@ import org.id2k1149.dinerVoting.model.User;
 import org.id2k1149.dinerVoting.model.Voter;
 import org.id2k1149.dinerVoting.repo.CounterRepo;
 import org.id2k1149.dinerVoting.repo.VoterRepo;
+import org.id2k1149.dinerVoting.util.TimeUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,38 +25,10 @@ public class VoterService {
     private final CounterRepo counterRepo;
     private final UserService userService;
 
-    public List<Voter> getAllVoters() {
-        log.info("Find all voters in DB");
-        return voterRepo.findAll();
-    }
-
-    public Voter getVoter(Long id) {
-        if (voterRepo.findById(id).isPresent()) {
-            return voterRepo.getById(id);
-        } else {
-            log.error("Id {} does not exist in DB", id);
-            throw new NotFoundException("Id " + id + " does not exists");
-        }
-    }
-
     @Transactional
     public Voter addVoter(Voter newVoter) {
         voterRepo.save(newVoter);
         return newVoter;
-    }
-
-    @Transactional
-    public void updateVoter(Long id, Voter voter) {
-        if (voterRepo.findById(id).isPresent()) {
-            Voter voterToUpdate = voterRepo.getById(id);
-            voterToUpdate.setDiner(voter.getDiner());
-            voterToUpdate.setDate(voter.getDate());
-            voterToUpdate.setUser(voter.getUser());
-            voterRepo.save(voterToUpdate);
-        } else {
-            log.error("Id {} does not exist in DB", id);
-            throw new NotFoundException("Id " + id + " does not exists");
-        }
     }
 
     @Transactional
@@ -68,13 +41,13 @@ public class VoterService {
         }
     }
 
-    public void checkVoter(Diner newDiner) {
-        User user = userService.findCurrentUser();
+    public void saveVoter(Diner newDiner) {
         Voter voter = new Voter();
+        User user = userService.findCurrentUser();
         voter.setUser(user);
-        Optional<Voter> optionalVoter = voterRepo.findByUserAndDate(user, LocalDate.now());
-        if (optionalVoter.isPresent()) {
-            voter = optionalVoter.get();
+        if (userVotedToday()) {
+            TimeUtil.checkTime();
+            voter = voterRepo.findByUserAndDate(user, LocalDate.now()).get();
             Diner voterDiner = voter.getDiner();
             Counter oldCounter = counterRepo
                     .findByDateAndDiner(LocalDate.now(), voterDiner)
@@ -89,5 +62,9 @@ public class VoterService {
 
     public Optional<Voter> getVoterByUserAndDate() {
         return voterRepo.findByUserAndDate(userService.findCurrentUser(), LocalDate.now());
+    }
+
+    public boolean userVotedToday() {
+        return voterRepo.findByUserAndDate(userService.findCurrentUser(), LocalDate.now()).isPresent();
     }
 }

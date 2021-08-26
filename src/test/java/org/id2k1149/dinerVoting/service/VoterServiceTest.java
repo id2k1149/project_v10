@@ -58,37 +58,12 @@ class VoterServiceTest {
         autoCloseable.close();
     }
 
-    @Test
-    void getVoters() {
-        voterService.getAllVoters();
-        verify(voterRepo).findAll();
-    }
-
-    @Test
-    void getVoter() {
-        long id = getRandomVoter().getId();
-        given(voterRepo.existsById(id)).willReturn(true);
-        voterService.getVoter(id);
-        verify(voterRepo).getById(id);
-    }
 
     @Test
     void addVoter() {
         Voter voter1 = getRandomVoter();
         Voter voter2 = voterService.addVoter(voter1);
         assertThat(voter2).isEqualTo(voter1);
-    }
-
-    @Test
-    void updateVoter() {
-        Voter voter = getRandomVoter();
-        long id = voter.getId();
-        given(voterRepo.existsById(id)).willReturn(true);
-        Voter voterToUpdate = getRandomVoter();
-        voterToUpdate.setId(id);
-        doReturn(voterToUpdate).when(voterRepo).getById(id);
-        voterService.updateVoter(id, voter);
-        assertThat(voterToUpdate.getDate()).isEqualTo(voter.getDate());
     }
 
     @Test
