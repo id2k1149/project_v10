@@ -2,6 +2,7 @@ package org.id2k1149.dinerVoting.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.id2k1149.dinerVoting.exception.NoResultsException;
 import org.id2k1149.dinerVoting.exception.NotFoundException;
 import org.id2k1149.dinerVoting.exception.TimeException;
 import org.id2k1149.dinerVoting.model.Diner;
@@ -31,49 +32,49 @@ public class CounterService {
     private final MenuRepo menuRepo;
     private final VoterService voterService;
 
-    public List<Counter> getCounters() {
-        log.info("Find all counters in DB");
-        return counterRepo.findAll();
-    }
+//    public List<Counter> getAllCounters() {
+//        log.info("Find all counters in DB");
+//        return counterRepo.findAll();
+//    }
 
-    public Counter getCounter(Long id) {
-        if (counterRepo.existsById(id)) {
-            return counterRepo.getById(id);
-        } else {
-            log.error("Id {} does not exist in DB", id);
-            throw new NotFoundException("Id " + id + " does not exists");
-        }
-    }
+//    public Counter getCounter(Long id) {
+//        if (counterRepo.existsById(id)) {
+//            return counterRepo.getById(id);
+//        } else {
+//            log.error("Id {} does not exist in DB", id);
+//            throw new NotFoundException("Id " + id + " does not exists");
+//        }
+//    }
 
-    @Transactional
-    public Counter addCounter(Counter newCounter) {
-        counterRepo.save(newCounter);
-        return newCounter;
-    }
+//    @Transactional
+//    public Counter addCounter(Counter newCounter) {
+//        counterRepo.save(newCounter);
+//        return newCounter;
+//    }
 
-    @Transactional
-    public void updateCounter(Long id, Counter counter) {
-        if (counterRepo.existsById(id)) {
-            Counter counterToUpdate = counterRepo.getById(id);
-            counterToUpdate.setDiner(counter.getDiner());
-            counterToUpdate.setDate(counter.getDate());
-            counterToUpdate.setVotes(counter.getVotes());
-            counterRepo.save(counterToUpdate);
-        } else {
-            log.error("Id {} does not exist in DB", id);
-            throw new NotFoundException("Id " + id + " does not exists");
-        }
-    }
+//    @Transactional
+//    public void updateCounter(Long id, Counter counter) {
+//        if (counterRepo.existsById(id)) {
+//            Counter counterToUpdate = counterRepo.getById(id);
+//            counterToUpdate.setDiner(counter.getDiner());
+//            counterToUpdate.setDate(counter.getDate());
+//            counterToUpdate.setVotes(counter.getVotes());
+//            counterRepo.save(counterToUpdate);
+//        } else {
+//            log.error("Id {} does not exist in DB", id);
+//            throw new NotFoundException("Id " + id + " does not exists");
+//        }
+//    }
 
-    @Transactional
-    public void deleteCounter(Long id) {
-        if (counterRepo.existsById(id)) {
-            counterRepo.deleteById(id);
-        } else {
-            log.error("Id {} does not exist in DB", id);
-            throw new NotFoundException("Id " + id + " does not exists");
-        }
-    }
+//    @Transactional
+//    public void deleteCounter(Long id) {
+//        if (counterRepo.existsById(id)) {
+//            counterRepo.deleteById(id);
+//        } else {
+//            log.error("Id {} does not exist in DB", id);
+//            throw new NotFoundException("Id " + id + " does not exists");
+//        }
+//    }
 
     @Transactional
     public void addVoiceToCounter(Counter counter) {
@@ -93,15 +94,18 @@ public class CounterService {
         voterService.checkVoter(newDiner);
     }
 
-    public List<Counter> getAllResults() {
+    public List<Counter> getTodayAllResults() {
         List<Counter> counterList = counterRepo.findAllByDate(LocalDate.now());
         return (counterList.size() == 0 ? counterList : counterList.stream()
                 .sorted(Comparator.comparingInt(Counter::getVotes).reversed())
                 .collect(Collectors.toList()));
     }
 
-    public Counter getBestResult() {
-        List<Counter> sortedList = getAllResults();
+    public Counter getTodayBestResult() {
+        List<Counter> sortedList = getTodayAllResults();
+        if (sortedList.size() == 0) {
+            throw new NoResultsException("There are no votes today.");
+        }
         return sortedList
                 .stream()
                 .max(Comparator.comparing(Counter::getVotes))

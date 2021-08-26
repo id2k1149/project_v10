@@ -1,5 +1,6 @@
 package org.id2k1149.dinerVoting.controller.rest;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.dinerVoting.model.User;
 import org.id2k1149.dinerVoting.service.UserService;
@@ -25,8 +26,8 @@ public class UserController {
 
     @GetMapping()
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public List<User> getUsers() {
-        return userService.getUsers();
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
     @GetMapping(path = "/{id}")
@@ -63,8 +64,11 @@ public class UserController {
         userService.deleteUser(id);
     }
 
-    @GetMapping(path = "/{id}/votes")
+    @GetMapping(path = "/{id}/history")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @ApiOperation(
+            value = "Finds history of user's votes",
+            notes = "History of user's decisions with dates and answers")
     public UserVotesTo getUserVotes(@PathVariable Long id) {
         return userService.getUserAllVotes(id);
     }

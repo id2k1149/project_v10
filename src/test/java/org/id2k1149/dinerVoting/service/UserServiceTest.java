@@ -72,7 +72,7 @@ class UserServiceTest {
 
     @Test
     void getUsers() {
-        userService.getUsers();
+        userService.getAllUsers();
         verify(userRepo).findAll();
     }
 

@@ -1,7 +1,9 @@
 package org.id2k1149.dinerVoting.controller.rest;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.dinerVoting.model.Diner;
+import org.id2k1149.dinerVoting.model.Menu;
 import org.id2k1149.dinerVoting.service.DinerService;
 import org.id2k1149.dinerVoting.service.CounterService;
 import org.id2k1149.dinerVoting.service.MenuService;
@@ -29,8 +31,8 @@ public class DinerController {
     static final String REST_URL = "/api/v1/diners";
 
     @GetMapping
-    public List<Diner> getDiners() {
-        return dinerService.getDiners();
+    public List<Diner> getAllDiners() {
+        return dinerService.getAllDiners();
     }
 
     @GetMapping(path = "{id}")
@@ -83,5 +85,21 @@ public class DinerController {
     public void voteForDiner(
             @PathVariable Long id) {
         counterService.voteForDiner(id);
+    }
+
+    @GetMapping(path = "{id}/history")
+    @ApiOperation(
+            value = "Finds all menu of diner",
+            notes = "History of diner's menu with dates, dishes and prices")
+    public DinerTo getMenuHistoryForDiner(@PathVariable Long id) {
+        return dinerService.getMenuHistoryForDiner(id);
+    }
+
+    @PostMapping(path = "{id}/menu", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void addMenuForDiner(
+            @RequestBody Menu menu,
+            @PathVariable Long id) {
+        menuService.addMenu(menu, id);
     }
 }
