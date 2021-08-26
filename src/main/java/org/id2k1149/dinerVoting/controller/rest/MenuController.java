@@ -2,9 +2,7 @@ package org.id2k1149.dinerVoting.controller.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.dinerVoting.model.Menu;
-import org.id2k1149.dinerVoting.service.DinerService;
 import org.id2k1149.dinerVoting.service.MenuService;
-import org.id2k1149.dinerVoting.to.DinerTo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

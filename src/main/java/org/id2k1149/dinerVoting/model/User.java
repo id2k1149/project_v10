@@ -24,7 +24,7 @@ public class User {
     @Size(min = 6, max = 32)
     @NotBlank
     private String username;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Size(min = 8, max = 32)
     @NotBlank
     private String password;

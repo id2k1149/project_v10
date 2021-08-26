@@ -2,7 +2,6 @@ package org.id2k1149.dinerVoting.controller.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.dinerVoting.model.Diner;
-import org.id2k1149.dinerVoting.model.Menu;
 import org.id2k1149.dinerVoting.service.DinerService;
 import org.id2k1149.dinerVoting.service.CounterService;
 import org.id2k1149.dinerVoting.service.MenuService;
@@ -68,7 +67,7 @@ public class DinerController {
     }
 
     @GetMapping("/today")
-    public List<DinerTo> getTodayMenu() {
+    public List<DinerTo> getTodayMenuForAllDiners() {
         return DinerUtil.getDinersTo(
                 menuService.getDinersMenuByDate(LocalDate.now()),
                 menuService.getByDate(LocalDate.now()));

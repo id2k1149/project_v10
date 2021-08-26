@@ -78,7 +78,7 @@ public class DataLoader implements ApplicationRunner {
                             Menu menu = new Menu();
                             menu.setDate(localDate);
                             menu.setDiner(diner);
-                            menu.setDishPrice(dishes);
+                            menu.setDishAndPrice(dishes);
                             menuRepo.save(menu);
                         }));
     }

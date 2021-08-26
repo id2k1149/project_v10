@@ -12,9 +12,7 @@ import org.id2k1149.dinerVoting.repo.DinerRepo;
 import org.id2k1149.dinerVoting.repo.CounterRepo;
 import org.id2k1149.dinerVoting.repo.MenuRepo;
 import org.id2k1149.dinerVoting.to.DinerTo;
-import org.id2k1149.dinerVoting.to.MenuTo;
 import org.id2k1149.dinerVoting.util.DinerUtil;
-import org.id2k1149.dinerVoting.util.MenuUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,7 +66,7 @@ public class MenuService {
                 Menu menuToUpdate = menuRepo.getById(id);
                 menuToUpdate.setDiner(menu.getDiner());
                 menuToUpdate.setDate(menu.getDate());
-                menuToUpdate.setDishPrice(menu.getDishPrice());
+                menuToUpdate.setDishAndPrice(menu.getDishAndPrice());
                 menuRepo.save(menuToUpdate);
             } else throw new CounterException("Can't edit. There were votes at that day.");
         } else {
@@ -125,7 +123,7 @@ public class MenuService {
                 BigDecimal digitalInfo = BigDecimal.valueOf(Double.parseDouble(new Faker().commerce().price(10, 100)));
                 dishesMap.put(stringInfo, digitalInfo);
             });
-            newMenu.setDishPrice(dishesMap);
+            newMenu.setDishAndPrice(dishesMap);
             menuRepo.save(newMenu);
         });
     }

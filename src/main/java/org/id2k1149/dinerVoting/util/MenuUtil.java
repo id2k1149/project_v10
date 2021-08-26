@@ -11,7 +11,7 @@ public class MenuUtil {
         return menuList
                 .stream()
                 .filter(menu -> menu.getDiner() == diner)
-                .map(menu -> new MenuTo(menu.getId(), menu.getDate(), menu.getDishPrice()))
+                .map(menu -> new MenuTo(menu.getId(), menu.getDate(), menu.getDishAndPrice()))
                 .collect(Collectors.toList());
     }
 }
