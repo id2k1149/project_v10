@@ -13,9 +13,11 @@
 <!-- Page content-->
 <div class="container">
     <div class="container text-center">
-        <div>
-            <h1> Please make your choice! </h1>
-        </div>
+        <c:if test="${info2 == null}">
+            <div>
+                <h1> Please make your choice! </h1>
+            </div>
+        </c:if>
 
         <c:if test="${info1 != null}">
             <%--            <h1>${role}</h1>--%>
@@ -26,9 +28,9 @@
             <p style="color:#337ab7"><strong>${info2}</strong></p>
         </c:if>
         <security:authorize access="hasAuthority('ROLE_ADMIN')">
-                <c:if test="${info3 != null}">
-                    <p style="color:#337ab7"><strong>${info3}</strong></p>
-                </c:if>
+            <c:if test="${info3 != null}">
+                <p style="color:#337ab7"><strong>${info3}</strong></p>
+            </c:if>
         </security:authorize>
         <form action="vote" method="post">
 

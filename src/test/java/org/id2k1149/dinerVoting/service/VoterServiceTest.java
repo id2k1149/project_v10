@@ -34,8 +34,6 @@ class VoterServiceTest {
     @Mock
     private VoterRepo voterRepo;
     @Mock
-    private CounterRepo counterRepo;
-    @Mock
     private UserService userService;
 
     public Voter getRandomVoter() {
@@ -50,7 +48,7 @@ class VoterServiceTest {
     @BeforeEach
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        voterService = new VoterService(voterRepo, counterRepo, userService);
+        voterService = new VoterService(voterRepo, userService);
     }
 
     @AfterEach
