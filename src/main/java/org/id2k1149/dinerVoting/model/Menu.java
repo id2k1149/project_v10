@@ -3,6 +3,7 @@ package org.id2k1149.dinerVoting.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -16,8 +17,9 @@ import static javax.persistence.GenerationType.AUTO;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Menu {
+public class Menu extends AbstractBaseEntity {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
@@ -27,22 +29,5 @@ public class Menu {
     @ElementCollection
     private Map<String, BigDecimal> dishAndPrice;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Menu)) return false;
-        Menu menu = (Menu) o;
-        return getId().equals(menu.getId())
-                && getDate().equals(menu.getDate())
-                && getDiner().equals(menu.getDiner())
-                && getDishAndPrice().equals(menu.getDishAndPrice());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(),
-                getDate(),
-                getDiner(),
-                getDishAndPrice());
-    }
 }

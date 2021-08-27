@@ -3,6 +3,7 @@ package org.id2k1149.dinerVoting.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,8 +15,9 @@ import static javax.persistence.GenerationType.AUTO;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Counter {
+public class Counter extends AbstractBaseEntity {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
@@ -23,23 +25,4 @@ public class Counter {
     @ManyToOne
     private Diner diner;
     private Integer votes;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Counter)) return false;
-        Counter counter = (Counter) o;
-        return getId().equals(counter.getId())
-                && getDate().equals(counter.getDate())
-                && getDiner().equals(counter.getDiner())
-                && getVotes().equals(counter.getVotes());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(),
-                getDate(),
-                getDiner(),
-                getVotes());
-    }
 }

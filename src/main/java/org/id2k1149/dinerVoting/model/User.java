@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -18,8 +19,9 @@ import static javax.persistence.GenerationType.AUTO;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class User {
+public class User extends AbstractBaseEntity {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
@@ -36,24 +38,5 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return getId().equals(user.getId())
-                && getUsername().equals(user.getUsername())
-                && getPassword().equals(user.getPassword())
-                && Objects.equals(getPasswordConfirm(), user.getPasswordConfirm())
-                && getRole() == user.getRole();
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(),
-                getUsername(),
-                getPassword(),
-                getPasswordConfirm(),
-                getRole());
-    }
 }
