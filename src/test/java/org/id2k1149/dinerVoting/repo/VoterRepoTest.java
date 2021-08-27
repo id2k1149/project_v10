@@ -65,6 +65,7 @@ class VoterRepoTest {
     public User getRandomUser() {
         User user = new User();
         user.setUsername(new Faker().name().username());
+        user.setPassword(new Faker().internet().password());
         testUserRepo.save(user);
         return user;
     }
