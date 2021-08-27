@@ -25,7 +25,8 @@ public class MenuController {
     @PostMapping(path = "{dinerId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void addMenuForDiner(
             @RequestBody Menu menu,
-            @PathVariable Long dinerId) {
+            @PathVariable Long dinerId
+    ) {
         menuService.addMenu(menu, dinerId);
     }
 
@@ -33,7 +34,8 @@ public class MenuController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateMenu(
             @RequestBody Menu Menu,
-            @PathVariable Long id) {
+            @PathVariable Long id
+    ) {
         menuService.updateMenu(Menu, id);
     }
 

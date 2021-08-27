@@ -5,11 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.Objects;
 
-import static javax.persistence.GenerationType.AUTO;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -19,13 +20,10 @@ import static javax.persistence.GenerationType.AUTO;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Voter extends AbstractBaseEntity {
     @Id
-    @GeneratedValue(strategy = AUTO)
     private Long id;
     private LocalDate date = LocalDate.now();
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     private Diner diner;
-
-
 }

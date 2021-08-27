@@ -9,9 +9,7 @@ import org.id2k1149.dinerVoting.to.HasId;
 import javax.persistence.*;
 
 @MappedSuperclass
-// http://stackoverflow.com/questions/594597/hibernate-annotations-which-is-better-field-or-property-access
 @Access(AccessType.FIELD)
-//@JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, isGetterVisibility = NONE, setterVisibility = NONE)
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class AbstractBaseEntity implements HasId {
@@ -19,10 +17,7 @@ public abstract class AbstractBaseEntity implements HasId {
 
     @Id
     @SequenceGenerator(name = "global_seq", sequenceName = "global_seq", allocationSize = 1, initialValue = START_SEQ)
-    //    @Column(name = "id", unique = true, nullable = false, columnDefinition = "integer default nextval('global_seq')")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
-//  See https://hibernate.atlassian.net/browse/HHH-3718 and https://hibernate.atlassian.net/browse/HHH-12034
-//  Proxy initialization when accessing its identifier managed now by JPA_PROXY_COMPLIANCE setting
     protected Long id;
 
     @Override
@@ -35,7 +30,6 @@ public abstract class AbstractBaseEntity implements HasId {
         return id;
     }
 
-    // doesn't work for hibernate lazy proxy
     public Long id() {
         Assert.notNull(id, "Entity must have id");
         return id;

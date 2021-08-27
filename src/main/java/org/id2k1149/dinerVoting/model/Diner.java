@@ -5,14 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
-
-import java.util.Objects;
-
-import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Data
@@ -22,7 +18,6 @@ import static javax.persistence.GenerationType.AUTO;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Diner extends AbstractBaseEntity {
     @Id
-    @GeneratedValue(strategy = AUTO)
     private Long id;
     @NotBlank
     private String title;
@@ -34,6 +29,4 @@ public class Diner extends AbstractBaseEntity {
     public String toString() {
         return title;
     }
-
-
 }

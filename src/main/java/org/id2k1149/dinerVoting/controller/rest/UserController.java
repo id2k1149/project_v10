@@ -63,7 +63,7 @@ public class UserController {
 
     @GetMapping(path = "/{id}/history")
     @ApiOperation(
-            value = "Finds history of user's votes",
+            value = "Finds a history of user's votes",
             notes = "History of user's decisions with dates and answers")
     public UserVotesTo getUserVotes(@PathVariable Long id) {
         return userService.getUserAllVotes(id);
