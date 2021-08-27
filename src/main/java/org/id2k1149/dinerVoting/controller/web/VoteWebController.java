@@ -38,8 +38,8 @@ public class VoteWebController {
             if (optionalVoter.isPresent()) {
                 model.addAttribute("info1", "you voted today...");
                 if (LocalTime.now().getHour() > 11) {
-                    model.addAttribute("info2", "It is too late to vote.");
-                    log.info("It is too late to vote.");
+                    model.addAttribute("info2", "It is too late to change your decision.");
+                    log.info("It is too late to change decision.");
                     return "vote";
                 }
             }

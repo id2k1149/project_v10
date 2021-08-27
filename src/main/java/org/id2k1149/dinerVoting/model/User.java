@@ -10,6 +10,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import java.util.Objects;
+
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
@@ -33,4 +35,25 @@ public class User {
     private String passwordConfirm;
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return getId().equals(user.getId())
+                && getUsername().equals(user.getUsername())
+                && getPassword().equals(user.getPassword())
+                && Objects.equals(getPasswordConfirm(), user.getPasswordConfirm())
+                && getRole() == user.getRole();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(),
+                getUsername(),
+                getPassword(),
+                getPasswordConfirm(),
+                getRole());
+    }
 }

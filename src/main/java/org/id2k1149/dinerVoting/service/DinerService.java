@@ -34,7 +34,6 @@ public class DinerService {
         if (dinerRepo.findById(id).isPresent()) {
             return dinerRepo.getById(id);
         } else {
-            log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
     }
@@ -43,7 +42,6 @@ public class DinerService {
     public Diner addDiner(Diner newDiner) {
         Optional<Diner> optionalDiner = Optional.ofNullable(dinerRepo.findDinerByTitle(newDiner.getTitle()));
         if (optionalDiner.isPresent()) {
-            log.error("The name {} is already used", newDiner.getTitle());
             throw new DuplicateNameException("The name " + newDiner.getTitle() + " is already used");
         }
         dinerRepo.save(newDiner);
@@ -59,7 +57,6 @@ public class DinerService {
                 dinerToUpdate.setTitle(diner.getTitle());
                 dinerRepo.save(dinerToUpdate);
             } else {
-                log.error("Id {} does not exist in DB", id);
                 throw new NotFoundException("Id " + id + " does not exists");
             }
         }
@@ -70,15 +67,8 @@ public class DinerService {
         if (dinerRepo.findById(id).isPresent()) {
             dinerRepo.deleteById(id);
         } else {
-            log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
-    }
-
-    public DinerTo getTodayMenuForDiner(Long id) {
-        List<Menu> menuList = menuRepo.findAllByDate(LocalDate.now());
-        List<MenuTo> menuToList = MenuUtil.getMenuTo(getDiner(id), menuList);
-        return new DinerTo(id, getDiner(id).getTitle(), menuToList);
     }
 
     public DinerTo getMenuHistoryForDiner(Long id) {

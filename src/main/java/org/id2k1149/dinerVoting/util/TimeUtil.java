@@ -6,7 +6,7 @@ import java.time.LocalTime;
 
 public class TimeUtil {
     public static void checkTime() {
-        int lastHourToVoteAgain = 23;
+        int lastHourToVoteAgain = 11;
         if (LocalTime.now().getHour() > lastHourToVoteAgain) throw new TimeException("You can't vote again after 11am");
     }
 }

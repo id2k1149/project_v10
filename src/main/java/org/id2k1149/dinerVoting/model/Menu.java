@@ -8,6 +8,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Objects;
+
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
@@ -24,4 +26,23 @@ public class Menu {
     private Diner diner;
     @ElementCollection
     private Map<String, BigDecimal> dishAndPrice;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Menu)) return false;
+        Menu menu = (Menu) o;
+        return getId().equals(menu.getId())
+                && getDate().equals(menu.getDate())
+                && getDiner().equals(menu.getDiner())
+                && getDishAndPrice().equals(menu.getDishAndPrice());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(),
+                getDate(),
+                getDiner(),
+                getDishAndPrice());
+    }
 }

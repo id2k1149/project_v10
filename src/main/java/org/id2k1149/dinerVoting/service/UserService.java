@@ -37,7 +37,6 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepo.findByUsername(username);
         if (user == null) {
-            log.error("User was not found in DB");
             throw new UsernameNotFoundException("User was not found in DB");
         } else {
             log.info("User was found in DB: {}", username);
@@ -64,7 +63,6 @@ public class UserService implements UserDetailsService {
         if (userRepo.findById(id).isPresent()) {
             return userRepo.getById(id);
         } else {
-            log.error("User with id {} does not exist in DB", id);
             throw new NotFoundException("User with id " + id + " does not exists");
         }
     }
@@ -72,7 +70,6 @@ public class UserService implements UserDetailsService {
     public User addUser(User user) {
         Optional<User> optionalUser = Optional.ofNullable(userRepo.findByUsername(user.getUsername()));
         if (optionalUser.isPresent()) {
-            log.error("The name {} is already used", user.getUsername());
             throw new DuplicateNameException("The name " + user.getUsername() + " is already used");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -96,7 +93,6 @@ public class UserService implements UserDetailsService {
             userRepo.save(userToUpdate);
             log.info("User {} was updated", user.getUsername());
         } else {
-            log.error("User with id {} does not exist in DB", id);
             throw new NotFoundException("User with id " + id + " does not exists");
         }
     }
@@ -106,7 +102,6 @@ public class UserService implements UserDetailsService {
         if (userRepo.findById(id).isPresent()) {
             userRepo.deleteById(id);
         } else {
-            log.error("User with id {} does not exist in DB", id);
             throw new NotFoundException("User with id " + id + " does not exists");
         }
     }
@@ -127,7 +122,6 @@ public class UserService implements UserDetailsService {
             List<VoterTo> voterToList = VoterUtil.getVoterTo(getUser(id), voterList);
             return new UserVotesTo(id, getUser(id).getUsername(), voterToList);
         } else {
-            log.error("User with id {} does not exist in DB", id);
             throw new NotFoundException("User with id " + id + " does not exists");
         }
     }
