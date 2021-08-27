@@ -67,6 +67,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    @Transactional
     public User addUser(User user) {
         Optional<User> optionalUser = Optional.ofNullable(userRepo.findByUsername(user.getUsername()));
         if (optionalUser.isPresent()) {

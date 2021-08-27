@@ -20,6 +20,7 @@ public class VoterService {
     private final VoterRepo voterRepo;
     private final UserService userService;
 
+    @Transactional
     public Voter addVoter(Voter newVoter) {
         voterRepo.save(newVoter);
         return newVoter;
@@ -35,6 +36,7 @@ public class VoterService {
         }
     }
 
+    @Transactional
     public void saveVoterForDiner(Diner newDiner) {
         Voter voter = new Voter();
         User user = userService.findCurrentUser();
