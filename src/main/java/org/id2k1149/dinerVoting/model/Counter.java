@@ -6,19 +6,21 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
+
+import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Counter extends AbstractBaseEntity {
+public class Counter {
     @Id
+    @EqualsAndHashCode.Include
+    @GeneratedValue(strategy = AUTO)
     private Long id;
     private LocalDate date = LocalDate.now();
     @ManyToOne

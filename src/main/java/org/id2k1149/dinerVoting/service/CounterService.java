@@ -32,6 +32,7 @@ public class CounterService {
     private final MenuRepo menuRepo;
     private final VoterService voterService;
 
+    @Transactional
     public void addVoiceToCounter(Counter counter) {
         Counter newCounter = new Counter();
         Diner newDiner = counter.getDiner();

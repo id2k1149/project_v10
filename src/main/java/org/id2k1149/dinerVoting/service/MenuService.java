@@ -43,6 +43,7 @@ public class MenuService {
         }
     }
 
+    @Transactional
     public Menu addMenu(Menu newMenu, Long dinerId) {
         if (dinerRepo.findById(dinerId).isPresent()) {
             if (menuRepo.findByDateAndDiner(LocalDate.now(), dinerRepo.getById(dinerId)) == null) {

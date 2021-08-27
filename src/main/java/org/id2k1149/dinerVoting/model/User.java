@@ -12,14 +12,18 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import static javax.persistence.GenerationType.AUTO;
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class User extends AbstractBaseEntity {
+public class User {
     @Id
+    @EqualsAndHashCode.Include
+    @GeneratedValue(strategy = AUTO)
     private Long id;
     @Size(min = 5, max = 32)
     @NotBlank
