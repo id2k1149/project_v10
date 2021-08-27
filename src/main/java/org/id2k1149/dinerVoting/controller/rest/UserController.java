@@ -18,14 +18,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = UserController.REST_URL)
-@PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
     static final String REST_URL = "/api/v1/users";
 
     @GetMapping()
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
@@ -35,7 +34,7 @@ public class UserController {
         return userService.getUser(id);
     }
 
-    @PostMapping(value = "/registration", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/registration" , consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("permitAll()")
     public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
         User created = userService.addUser(user);
@@ -47,7 +46,6 @@ public class UserController {
     }
 
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateUser(
             @Valid
@@ -59,13 +57,11 @@ public class UserController {
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
 
     @GetMapping(path = "/{id}/history")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ApiOperation(
             value = "Finds history of user's votes",
             notes = "History of user's decisions with dates and answers")

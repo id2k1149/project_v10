@@ -3,9 +3,7 @@ package org.id2k1149.dinerVoting.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.id2k1149.dinerVoting.model.Diner;
-import org.id2k1149.dinerVoting.model.Menu;
 import org.id2k1149.dinerVoting.service.DinerService;
-import org.id2k1149.dinerVoting.service.CounterService;
 import org.id2k1149.dinerVoting.service.MenuService;
 import org.id2k1149.dinerVoting.to.DinerTo;
 import org.id2k1149.dinerVoting.util.DinerUtil;
@@ -74,25 +72,11 @@ public class DinerController {
                 menuService.getByDate(LocalDate.now()));
     }
 
-//    @GetMapping(path = "{id}/today")
-//    public DinerTo getTodayMenuForDiner(@PathVariable Long id) {
-//        return dinerService.getTodayMenuForDiner(id);
-//    }
-
-
     @GetMapping(path = "{id}/history")
     @ApiOperation(
-            value = "Finds all menu of diner",
-            notes = "History of diner's menu with dates, dishes and prices")
+            value = "Finds diner's menu history",
+            notes = "Diner's menu history with dates, dishes and prices")
     public DinerTo getMenuHistoryForDiner(@PathVariable Long id) {
         return dinerService.getMenuHistoryForDiner(id);
-    }
-
-    @PostMapping(path = "{id}/menu", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void addMenuForDiner(
-            @RequestBody Menu menu,
-            @PathVariable Long id) {
-        menuService.addMenu(menu, id);
     }
 }

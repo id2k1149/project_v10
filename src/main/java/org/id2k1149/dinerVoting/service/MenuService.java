@@ -39,12 +39,10 @@ public class MenuService {
         if (menuRepo.findById(id).isPresent()) {
             return menuRepo.getById(id);
         } else {
-            log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
     }
 
-    @Transactional
     public Menu addMenu(Menu newMenu, Long dinerId) {
         if (dinerRepo.findById(dinerId).isPresent()) {
             if (menuRepo.findByDateAndDiner(LocalDate.now(), dinerRepo.getById(dinerId)) == null) {
@@ -54,7 +52,6 @@ public class MenuService {
             return newMenu;
 
         } else {
-            log.error("Id {} does not exist in DB", dinerId);
             throw new NotFoundException("Id " + dinerId + " does not exists");
         }
     }
@@ -70,7 +67,6 @@ public class MenuService {
                 menuRepo.save(menuToUpdate);
             } else throw new CounterException("Can't edit. There were votes at that day.");
         } else {
-            log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
     }
@@ -80,7 +76,6 @@ public class MenuService {
         if (menuRepo.findById(id).isPresent()) {
             menuRepo.deleteById(id);
         } else {
-            log.error("Id {} does not exist in DB", id);
             throw new NotFoundException("Id " + id + " does not exists");
         }
     }

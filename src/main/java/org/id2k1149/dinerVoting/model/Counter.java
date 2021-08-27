@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
+
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
@@ -21,4 +23,23 @@ public class Counter {
     @ManyToOne
     private Diner diner;
     private Integer votes;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Counter)) return false;
+        Counter counter = (Counter) o;
+        return getId().equals(counter.getId())
+                && getDate().equals(counter.getDate())
+                && getDiner().equals(counter.getDiner())
+                && getVotes().equals(counter.getVotes());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(),
+                getDate(),
+                getDiner(),
+                getVotes());
+    }
 }

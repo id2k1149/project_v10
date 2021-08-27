@@ -25,28 +25,23 @@ Swagger Api Documentation (admin/password) - http://localhost:8080/swagger-ui.ht
 -L 'http://localhost:8080/api/v1/diners' -u admin:password`
 
 #### add a new Menu to Diner#3
-`curl -s -X POST -d '{"details": { "New Toast": 35.92, "New Ribs": 63.85 } }' 
+`curl -s -X POST -d '{"dishAndPrice": { "New Toast": 35.92, "New Ribs": 63.85 } }' 
 -H 'Content-Type:application/json;charset=UTF-8' 
--L 'http://localhost:8080/api/v1/diners/3/menu' -u admin:password`
-
-#### add a new Menu to Diner#4
-`curl -s -X POST -d '{"details": { "Pizza": 15.92, "Fish and Chips": 23.15 } }'
--H 'Content-Type:application/json;charset=UTF-8'
--L 'http://localhost:8080/api/v1/diners/4/menu' -u admin:password`
+-L 'http://localhost:8080/api/v1/menus/3' -u admin:password`
 
 #### get today Menu from all Diners
-`curl -s -L 'http://localhost:8080/api/v1/diners/today' -u user:password`
+`curl -s -L 'http://localhost:8080/api/v1/diners/today' -u user1:password`
 
 #### vote for Diner#3
 `curl -X POST 
 -H 'Content-Type:application/json;charset=UTF-8' 
--L 'http://localhost:8080/api/v1/diners/3/vote' -u user:password`
+-L 'http://localhost:8080/api/v1/results/3' -u user1:password`
 
 #### get today voting results
-`curl -L 'http://localhost:8080/api/v1/counters/today' -u user:password`
+`curl -L 'http://localhost:8080/api/v1/results/today' -u user1:password`
 
 #### get today best result
-`curl -L 'http://localhost:8080/api/v1/counters/best' -u user:password`
+`curl -L 'http://localhost:8080/api/v1/results/best' -u user1:password`
 
 #### get all history of how User#2 voted
-`curl -L 'http://localhost:8080/api/v1/users/2/votes' -u admin:password`
+`curl -L 'http://localhost:8080/api/v1/users/2/history' -u admin:password`

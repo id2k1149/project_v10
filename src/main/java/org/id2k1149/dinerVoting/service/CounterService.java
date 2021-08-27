@@ -32,51 +32,6 @@ public class CounterService {
     private final MenuRepo menuRepo;
     private final VoterService voterService;
 
-//    public List<Counter> getAllCounters() {
-//        log.info("Find all counters in DB");
-//        return counterRepo.findAll();
-//    }
-
-//    public Counter getCounter(Long id) {
-//        if (counterRepo.existsById(id)) {
-//            return counterRepo.getById(id);
-//        } else {
-//            log.error("Id {} does not exist in DB", id);
-//            throw new NotFoundException("Id " + id + " does not exists");
-//        }
-//    }
-
-//    @Transactional
-//    public Counter addCounter(Counter newCounter) {
-//        counterRepo.save(newCounter);
-//        return newCounter;
-//    }
-
-//    @Transactional
-//    public void updateCounter(Long id, Counter counter) {
-//        if (counterRepo.existsById(id)) {
-//            Counter counterToUpdate = counterRepo.getById(id);
-//            counterToUpdate.setDiner(counter.getDiner());
-//            counterToUpdate.setDate(counter.getDate());
-//            counterToUpdate.setVotes(counter.getVotes());
-//            counterRepo.save(counterToUpdate);
-//        } else {
-//            log.error("Id {} does not exist in DB", id);
-//            throw new NotFoundException("Id " + id + " does not exists");
-//        }
-//    }
-
-//    @Transactional
-//    public void deleteCounter(Long id) {
-//        if (counterRepo.existsById(id)) {
-//            counterRepo.deleteById(id);
-//        } else {
-//            log.error("Id {} does not exist in DB", id);
-//            throw new NotFoundException("Id " + id + " does not exists");
-//        }
-//    }
-
-    @Transactional
     public void addVoiceToCounter(Counter counter) {
         Counter newCounter = new Counter();
         Diner newDiner = counter.getDiner();

@@ -29,8 +29,8 @@ public class ResultController {
 
     @PostMapping(path = "{dinerId}")
     @ApiOperation(
-            value = "Vote for diner with dinerId",
-            notes = "Current user votes for diner with dinerId")
+            value = "Vote for diner using dinerId",
+            notes = "Current user votes for diner knowing its id")
     public void voteForDiner(@PathVariable Long dinerId) {
         counterService.voteForDiner(dinerId);
     }
