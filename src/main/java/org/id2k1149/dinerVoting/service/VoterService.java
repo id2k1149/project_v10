@@ -6,13 +6,11 @@ import org.id2k1149.dinerVoting.exception.NotFoundException;
 import org.id2k1149.dinerVoting.model.Diner;
 import org.id2k1149.dinerVoting.model.User;
 import org.id2k1149.dinerVoting.model.Voter;
-import org.id2k1149.dinerVoting.repo.CounterRepo;
 import org.id2k1149.dinerVoting.repo.VoterRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @Service
