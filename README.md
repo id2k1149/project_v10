@@ -45,3 +45,6 @@ Swagger Api Documentation (admin/password) - http://localhost:8080/swagger-ui.ht
 
 #### get all history of how User#100000 voted
 `curl -L 'http://localhost:8080/api/v1/users/100000/history' -u admin:password`
+
+#### get all history of menu for diner#100003
+`curl -s -L 'http://localhost:8080/api/v1/diners/100003/history' -u user1:password`

@@ -7,13 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
-import java.util.Objects;
-
-import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Data
@@ -23,7 +20,6 @@ import static javax.persistence.GenerationType.AUTO;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User extends AbstractBaseEntity {
     @Id
-    @GeneratedValue(strategy = AUTO)
     private Long id;
     @Size(min = 5, max = 32)
     @NotBlank
@@ -37,6 +33,4 @@ public class User extends AbstractBaseEntity {
     private String passwordConfirm;
     @Enumerated(EnumType.STRING)
     private Role role;
-
-
 }
