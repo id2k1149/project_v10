@@ -43,7 +43,7 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private void addVotes() {
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 2; j++) {
                 Diner diner = dinerRepo.findAll().get(new Random().nextInt(2));
                 Optional<Counter> optionalCounter = counterRepo.findByDateAndDiner(LocalDate.now().minusDays(2 - i), diner);
@@ -70,7 +70,7 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private void addMenu() {
-        IntStream.range(0, 2)
+        IntStream.range(0, 3)
                 .mapToObj(i -> LocalDate.now().minusDays(2 - i))
                 .forEach(localDate -> IntStream.range(0, 2)
                         .mapToObj(j -> dinerRepo.findAll().get(j))
