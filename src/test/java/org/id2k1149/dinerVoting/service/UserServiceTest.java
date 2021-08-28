@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -71,17 +72,18 @@ class UserServiceTest {
     }
 
     @Test
-    void getUsers() {
+    void getAllUsers() {
         userService.getAllUsers();
         verify(userRepo).findAll();
     }
 
     @Test
     void getUser() {
-        long id = getRandomUser().getId();
-        given(userRepo.existsById(id)).willReturn(true);
-        userService.getUser(id);
-        verify(userRepo).getById(id);
+        User user = getRandomUser();
+        long id = user.getId();
+        doReturn(Optional.of(user)).when(userRepo).findById(id);
+        User testUser = userService.getUser(id);
+        assertThat(testUser).isEqualTo(user);
     }
 
     @Test
@@ -95,7 +97,7 @@ class UserServiceTest {
     void updateUser() {
         User user = getRandomUser();
         long id = user.getId();
-        given(userRepo.existsById(id)).willReturn(true);
+        given(userRepo.findById(id)).willReturn(Optional.of(user));
         User userToUpdate = getRandomUser();
         userToUpdate.setId(id);
         doReturn(userToUpdate).when(userRepo).getById(id);
@@ -105,8 +107,9 @@ class UserServiceTest {
 
     @Test
     void deleteUser() {
-        long id = getRandomUser().getId();
-        given(userRepo.existsById(id)).willReturn(true);
+        User user = getRandomUser();
+        long id = user.getId();
+        given(userRepo.findById(id)).willReturn(Optional.of(user));
         userService.deleteUser(id);
         verify(userRepo).deleteById(id);
     }

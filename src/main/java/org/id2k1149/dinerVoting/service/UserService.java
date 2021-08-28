@@ -51,6 +51,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User findByUsername(String username) throws UsernameNotFoundException {
+        log.info("Find user with username {}", username);
         return userRepo.findByUsername(username);
     }
 
@@ -60,11 +61,8 @@ public class UserService implements UserDetailsService {
     }
 
     public User getUser(Long id) {
-        if (userRepo.findById(id).isPresent()) {
-            return userRepo.getById(id);
-        } else {
-            throw new NotFoundException("User with id " + id + " does not exists");
-        }
+        return userRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("User with id " + id + " does not exists"));
     }
 
     @Transactional
@@ -85,7 +83,6 @@ public class UserService implements UserDetailsService {
     @Transactional
     public void updateUser(User user,
                            Long id) {
-
         if (userRepo.findById(id).isPresent()) {
             User userToUpdate = userRepo.getById(id);
             userToUpdate.setUsername(user.getUsername());
@@ -113,7 +110,7 @@ public class UserService implements UserDetailsService {
                 .getAuthentication()
                 .getPrincipal();
         String username = principal instanceof UserDetails ? ((UserDetails) principal).getUsername() : principal.toString();
-        log.info("User with name {} was found in DB", username);
+        log.info("Current User with name {} was found in DB", username);
         return userRepo.findByUsername(username);
     }
 
