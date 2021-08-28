@@ -1,5 +1,6 @@
 package org.id2k1149.dinerVoting.service;
 
+import org.id2k1149.dinerVoting.model.Diner;
 import org.id2k1149.dinerVoting.model.Menu;
 import org.id2k1149.dinerVoting.repo.DinerRepo;
 import org.id2k1149.dinerVoting.repo.CounterRepo;
@@ -16,6 +17,7 @@ import org.mockito.quality.Strictness;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -36,10 +38,8 @@ class MenuServiceTest {
     private DinerRepo dinerRepo;
     @Mock
     private CounterRepo counterRepo;
-    @Mock
-    private DinerService dinerService;
 
-    public static Menu getRandomInfo() {
+    public static Menu getRandomMenu() {
         Menu menu = new Menu();
         menu.setId((long) new Random().nextInt(10));
         menu.setDate(LocalDate.now().minusDays(menu.getId()));
@@ -66,29 +66,30 @@ class MenuServiceTest {
 
     @Test
     void getMenu() {
-        long id = getRandomInfo().getId();
-        given(menuRepo.existsById(id)).willReturn(true);
-        menuService.getMenu(id);
-        verify(menuRepo).getById(id);
+        Menu menu = getRandomMenu();
+        long id = menu.getId();
+        doReturn(Optional.of(menu)).when(menuRepo).findById(id);
+        Menu testMenu = menuService.getMenu(id);
+        assertThat(testMenu).isEqualTo(menu);
     }
 
     @Test
     @MockitoSettings(strictness = Strictness.LENIENT)
     void addMenu() {
-        Menu menu1 = getRandomInfo();
-        long id = menu1.getDiner().getId();
-        given(dinerRepo.existsById(id)).willReturn(true);
+        Menu menu1 = getRandomMenu();
+        Diner diner = menu1.getDiner();
+        long id = diner.getId();
+        given(dinerRepo.findById(id)).willReturn(Optional.of(diner));
         Menu menu2 = menuService.addMenu(menu1, id);
         assertThat(menu2).isEqualTo(menu1);
     }
 
     @Test
     void updateMenu() {
-        Menu menu = getRandomInfo();
-        System.out.println("menu ->" + menu);
+        Menu menu = getRandomMenu();
         long id = menu.getId();
-        given(menuRepo.existsById(id)).willReturn(true);
-        Menu menuToUpdate = getRandomInfo();
+        given(menuRepo.findById(id)).willReturn(Optional.of(menu));
+        Menu menuToUpdate = getRandomMenu();
         menuToUpdate.setId(id);
         doReturn(menuToUpdate).when(menuRepo).getById(id);
         menuService.updateMenu(menu, id);
@@ -97,8 +98,9 @@ class MenuServiceTest {
 
     @Test
     void deleteMenu() {
-        long id = getRandomInfo().getId();
-        given(menuRepo.existsById(id)).willReturn(true);
+        Menu menu = getRandomMenu();
+        long id = menu.getId();
+        given(menuRepo.findById(id)).willReturn(Optional.of(menu));
         menuService.deleteMenu(id);
         verify(menuRepo).deleteById(id);
     }
@@ -115,6 +117,5 @@ class MenuServiceTest {
         LocalDate localDate = LocalDate.now();
         menuService.getDinersMenuByDate(localDate);
         verify(menuRepo).findAllByDate(localDate);
-
     }
 }

@@ -36,11 +36,8 @@ public class MenuService {
     }
 
     public Menu getMenu(Long id) {
-        if (menuRepo.findById(id).isPresent()) {
-            return menuRepo.getById(id);
-        } else {
-            throw new NotFoundException("Id " + id + " does not exists");
-        }
+        return menuRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Menu with id " + id + " does not exists"));
     }
 
     @Transactional

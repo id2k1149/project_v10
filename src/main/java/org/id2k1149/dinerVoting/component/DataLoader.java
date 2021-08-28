@@ -51,7 +51,7 @@ public class DataLoader implements ApplicationRunner {
                 counter.setDate(LocalDate.now().minusDays(2 - i));
                 counter.setDiner(diner);
                 counter.setVotes(optionalCounter.isEmpty() ? 1 : 2);
-//                if (i == 2) { counter.setVotes(1); }
+                if (i == 2) { counter.setVotes(1); }
                 counterRepo.save(counter);
                 Voter voter = new Voter();
                 voter.setDate(LocalDate.now().minusDays(2 - i));

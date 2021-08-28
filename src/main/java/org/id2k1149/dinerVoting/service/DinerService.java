@@ -30,11 +30,8 @@ public class DinerService {
     }
 
     public Diner getDiner(Long id) {
-        if (dinerRepo.findById(id).isPresent()) {
-            return dinerRepo.getById(id);
-        } else {
-            throw new NotFoundException("Id " + id + " does not exists");
-        }
+        return dinerRepo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Diner with id " + id + " does not exists"));
     }
 
     @Transactional

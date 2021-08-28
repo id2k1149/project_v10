@@ -16,22 +16,22 @@ Each diner provides a new menu each day.
 `http://localhost:8080/swagger-ui.html`
 
 #### add a new User
-`curl -s -X POST -d '{"username":"newUser", "password":"password"}'
+`curl -X POST -d '{"username":"newUser", "password":"password"}'
 -H 'Content-Type:application/json;charset=UTF-8'
 -L 'http://localhost:8080/api/v1/users/registration'`
 
 #### add a new Diner
-`curl -s -X POST -d '{"title":"New Diner"}' 
+`curl -X POST -d '{"title":"New Diner"}' 
 -H 'Content-Type:application/json;charset=UTF-8' 
 -L 'http://localhost:8080/api/v1/diners' -u admin:password`
 
 #### add a new Menu to Diner#3
-`curl -s -X POST -d '{"dishAndPrice": { "New Toast": 35.92, "New Ribs": 63.85 } }' 
+`curl -X POST -d '{"dishAndPrice": { "New Toast": 35.92, "New Ribs": 63.85 } }' 
 -H 'Content-Type:application/json;charset=UTF-8' 
 -L 'http://localhost:8080/api/v1/menus/3' -u admin:password`
 
 #### get today Menu from all Diners
-`curl -s -L 'http://localhost:8080/api/v1/diners/today' -u user1:password`
+`curl -L 'http://localhost:8080/api/v1/diners/today' -u user1:password`
 
 #### vote for Diner#3
 `curl -X POST 
@@ -48,4 +48,4 @@ Each diner provides a new menu each day.
 `curl -L 'http://localhost:8080/api/v1/users/1/history' -u admin:password`
 
 #### get all history of menu for diner#3
-`curl -s -L 'http://localhost:8080/api/v1/diners/3/history' -u user1:password`
+`curl -L 'http://localhost:8080/api/v1/diners/3/history' -u user1:password`

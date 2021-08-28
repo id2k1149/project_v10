@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.Optional;
 import java.util.Random;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -50,17 +51,18 @@ class DinerServiceTest {
     }
 
     @Test
-    void getDiners() {
+    void getAllDiners() {
         dinerService.getAllDiners();
         verify(dinerRepo).findAll();
     }
 
     @Test
     void getDiner() {
-        long id = getRandomDiner().getId();
-        given(dinerRepo.existsById(id)).willReturn(true);
-        dinerService.getDiner(id);
-        verify(dinerRepo).getById(id);
+        Diner diner = getRandomDiner();
+        long id = diner.getId();
+        doReturn(Optional.of(diner)).when(dinerRepo).findById(id);
+        Diner testDiner = dinerService.getDiner(id);
+        assertThat(testDiner).isEqualTo(diner);
     }
 
     @Test
@@ -74,7 +76,7 @@ class DinerServiceTest {
     void updateDiner() {
         Diner diner = getRandomDiner();
         long id = diner.getId();
-        given(dinerRepo.existsById(id)).willReturn(true);
+        given(dinerRepo.findById(id)).willReturn(Optional.of(diner));
         Diner dinerToUpdate = getRandomDiner();
         dinerToUpdate.setId(id);
         doReturn(dinerToUpdate).when(dinerRepo).getById(id);
@@ -84,19 +86,12 @@ class DinerServiceTest {
 
     @Test
     void deleteDiner() {
-        long id = getRandomDiner().getId();
-        given(dinerRepo.existsById(id)).willReturn(true);
+        Diner diner = getRandomDiner();
+        long id = diner.getId();
+        given(dinerRepo.findById(id)).willReturn(Optional.of(diner));
         dinerService.deleteDiner(id);
         verify(dinerRepo).deleteById(id);
     }
-
-//    @Test
-//    void Kathtest() {
-//        List<Diner> diners = dinerService.getDiners();
-//        System.out.println(diners);
-//        Diner diner = dinerService.getDiner(diners.get(0).getId());
-//        System.out.println(diner);
-//    }
 
     @Test
     void getAllMenuForDiner() {

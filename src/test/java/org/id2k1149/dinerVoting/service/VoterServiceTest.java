@@ -16,6 +16,7 @@ import org.mockito.quality.Strictness;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -66,19 +67,16 @@ class VoterServiceTest {
 
     @Test
     void deleteVoter() {
-        long id = getRandomVoter().getId();
-        given(voterRepo.existsById(id)).willReturn(true);
+        Voter voter = getRandomVoter();
+        long id = voter.getId();
+        given(voterRepo.findById(id)).willReturn(Optional.of(voter));
         voterService.deleteVoter(id);
         verify(voterRepo).deleteById(id);
     }
 
     @Test
-    void checkVoter() {
-    }
-
-    @Test
     @MockitoSettings(strictness = Strictness.LENIENT)
-    void checkUser() {
+    void getVoterByUserAndDate() {
         User user = getRandomUser();
         doReturn(user).when(userService).findCurrentUser();
         voterService.getVoterByUserAndDate();
