@@ -60,7 +60,7 @@ After first launch you get
 `curl -L 'http://localhost:8080/api/v1/results/best' -u user1:password`
 
 #### get all history of how User#1 voted
-`curl -L 'http://localhost:8080/api/v1/users/1/history' -u admin:password`
+`curl -L 'http://localhost:8080/api/v1/users/2/history' -u admin:password`
 
 #### get all history of menu for diner#3
 `curl -L 'http://localhost:8080/api/v1/diners/3/history' -u user1:password`
