@@ -16,10 +16,10 @@ public class MenuController {
     private final MenuService menuService;
     static final String REST_URL = "/api/v1/menus";
 
-    @GetMapping(path = "{id}")
+    @GetMapping(path = "{menuId}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
-    public Menu getMenu(@PathVariable Long id) {
-        return menuService.getMenu(id);
+    public Menu getMenu(@PathVariable Long menuId) {
+        return menuService.getMenu(menuId);
     }
 
     @PostMapping(path = "{dinerId}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -30,18 +30,18 @@ public class MenuController {
         menuService.addMenu(menu, dinerId);
     }
 
-    @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "{menuId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateMenu(
-            @RequestBody Menu Menu,
-            @PathVariable Long id
+            @RequestBody Menu newMenu,
+            @PathVariable Long menuId
     ) {
-        menuService.updateMenu(Menu, id);
+        menuService.updateMenu(newMenu, menuId);
     }
 
-    @DeleteMapping(path = "{id}")
+    @DeleteMapping(path = "{menuId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMenu(@PathVariable Long id) {
-        menuService.deleteMenu(id);
+    public void deleteMenu(@PathVariable Long menuId) {
+        menuService.deleteMenu(menuId);
     }
 }
