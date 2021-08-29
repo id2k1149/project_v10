@@ -55,17 +55,17 @@ public class MenuService {
     }
 
     @Transactional
-    public void updateMenu(Menu menu, Long id) {
-        if (menuRepo.findById(id).isPresent()) {
-            if (counterRepo.getFirstByDate(menu.getDate()).isEmpty()) {
-                Menu menuToUpdate = menuRepo.getById(id);
-                menuToUpdate.setDiner(menu.getDiner());
-                menuToUpdate.setDate(menu.getDate());
-                menuToUpdate.setDishAndPrice(menu.getDishAndPrice());
+    public void updateMenu(Menu newMenu, Long menuId) {
+        if (menuRepo.findById(menuId).isPresent()) {
+            if (counterRepo.getFirstByDate(newMenu.getDate()).isEmpty()) {
+                Menu menuToUpdate = menuRepo.getById(menuId);
+                menuToUpdate.setDiner(newMenu.getDiner());
+                menuToUpdate.setDate(newMenu.getDate());
+                menuToUpdate.setDishAndPrice(newMenu.getDishAndPrice());
                 menuRepo.save(menuToUpdate);
             } else throw new CounterException("Can't edit. There were votes at that day.");
         } else {
-            throw new NotFoundException("Id " + id + " does not exists");
+            throw new NotFoundException("Id " + menuId + " does not exists");
         }
     }
 
